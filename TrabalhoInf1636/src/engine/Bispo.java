@@ -9,6 +9,7 @@
 
 package engine;
 
+import excecoes.AtacarPeca;
 import auxiliar.Ponto;
 
 public class Bispo implements Peca  {
@@ -31,11 +32,72 @@ public class Bispo implements Peca  {
 		
 		pt0 = new Ponto( x , y ) ;
 	}
+
+	public Bispo( char lado , Ponto atual )
+	{
+		this.lado = lado ;
+		
+		pt0 = atual ;
+	}
+	
+	public boolean ChecaPosicionamento(int xFinal , int yFinal) throws AtacarPeca
+	{
+		boolean pode = ( pt0.AlinhadoIncl(new Ponto( xFinal , yFinal) ) && !PecaNoCaminho(xFinal , yFinal) );
+		comida = Tabuleiro.getPeca(yFinal , xFinal);
+		
+		if(pode && comida != null)
+			throw new AtacarPeca(xFinal , yFinal);
+		
+		return pode; 
+	}
 	
 	public boolean ChecaMovimentoPeca(int xFinal , int yFinal)
 	{
-		comida = Tabuleiro.getTabuleiro().getPeca(yFinal, xFinal) ;
-		return ( pt0.AlinhadoIncl(new Ponto( xFinal , yFinal) ) && !PecaNoCaminho(xFinal , yFinal) );
+		boolean sePode = false;
+		try
+		{
+			sePode = ChecaPosicionamento(xFinal , yFinal);
+		}
+		catch(AtacarPeca e)
+		{
+			return true;
+		}
+		
+		return sePode;
+	}
+	
+	public boolean VefXeque() 
+	{
+		Ponto posRei;
+		if ( lado == 'b' )
+		{
+			posRei = Tabuleiro.getReiPreto();
+		}
+		else
+		{
+			posRei = Tabuleiro.getReiBranco();
+		}
+		
+		try
+		{
+			ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
+		}
+		catch(AtacarPeca a)
+		{
+			if(lado == 'p')
+				Tabuleiro.XequeReiBranco(true);
+			else
+				Tabuleiro.XequeReiPreto(true);
+			
+			return true;
+		}
+		
+		if(lado == 'p')
+			Tabuleiro.XequeReiBranco(false);
+		else
+			Tabuleiro.XequeReiPreto(false);
+		
+		return false;
 	}
 	
 	public void setPonto(int x, int y)
@@ -66,7 +128,6 @@ public class Bispo implements Peca  {
 	
 	private boolean PecaNoCaminho(int xFinal, int yFinal)
 	{
-		Tabuleiro tab = Tabuleiro.getTabuleiro();
 		Peca teste;
 		
 		int deltaY = yFinal - pt0.getY();
@@ -78,7 +139,7 @@ public class Bispo implements Peca  {
 		int xTeste = pt0.getX() + rX ;
 		int yTeste = pt0.getY() + rY ;
 		
-		teste = tab.getPeca(yTeste , xTeste ) ;
+		teste = Tabuleiro.getPeca(yTeste , xTeste ) ;
 		
 		while( xTeste != xFinal && yTeste != yFinal )
 		{
@@ -87,7 +148,7 @@ public class Bispo implements Peca  {
 			
 			xTeste += rX;
 			yTeste += rY;
-			teste = tab.getPeca(yTeste , xTeste) ;
+			teste = Tabuleiro.getPeca(yTeste , xTeste) ;
 		}
 		
 		return false;

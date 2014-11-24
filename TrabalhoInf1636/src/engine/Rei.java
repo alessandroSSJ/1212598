@@ -36,24 +36,40 @@ public class Rei implements Peca {
 		pt0 = new Ponto( x , y ) ;
 	}
 	
+	public boolean ChecaPosicionamento(int xFinal , int yFinal)
+	{
+		return false;
+	}
+	
 	public boolean ChecaMovimentoPeca(int xFinal , int yFinal) throws RoqueDireita, RoqueEsquerda
 	{
 		int distX = pt0.getX() - xFinal ;
 		int distY = pt0.getY() - yFinal ;
 		boolean sePode;
 		
-		comida = Tabuleiro.getTabuleiro().getPeca(yFinal, xFinal) ;
+		comida = Tabuleiro.getPeca(yFinal, xFinal) ;
 		
 		if ( !movimentou && distY == 0 )
 		{
 			if( distX == -2 && ChecaRoqueDireita() )
 			{
 				movimentou = true;
+				
+				if ( lado == 'b' )
+					Tabuleiro.setReiBranco(xFinal , yFinal);
+				else
+					Tabuleiro.setReiPreto(xFinal , yFinal);
+				
 				throw new RoqueDireita(pt0.getX() + 3 , pt0.getY() );
 			}
 			else if( distX == 2 && ChecaRoqueEsquerda() )
 			{
 				movimentou = true;
+				
+				if ( lado == 'b' )
+					Tabuleiro.setReiBranco(xFinal , yFinal);
+				else
+					Tabuleiro.setReiPreto(xFinal , yFinal);
 				throw new RoqueEsquerda(pt0.getX() - 4 , pt0.getY() );
 			}
 		}
@@ -63,30 +79,69 @@ public class Rei implements Peca {
 		if ( !movimentou )
 			movimentou = sePode;
 		
+		if ( sePode )
+		{
+			if ( lado == 'b' )
+				Tabuleiro.setReiBranco(xFinal , yFinal);
+			else
+				Tabuleiro.setReiPreto(xFinal , yFinal);
+		}
+		
 		return sePode;
 	}
 	
-	private boolean ChecaRoqueDireita()
+	public boolean VefXeque() 
 	{
-		Tabuleiro tab = Tabuleiro.getTabuleiro();
+		Ponto posRei;
 		
+		if ( lado == 'b' )
+		{
+			posRei = Tabuleiro.getReiPreto();
+		}
+		else
+		{
+			posRei = Tabuleiro.getReiBranco();
+		}
+		
+		try
+		{
+			ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
+		}
+		catch(Exception a)
+		{
+			if(lado == 'p')
+				Tabuleiro.XequeReiBranco(true);
+			else
+				Tabuleiro.XequeReiPreto(true);
+			
+			return true;
+		}
+		
+		if(lado == 'p')
+			Tabuleiro.XequeReiBranco(false);
+		else
+			Tabuleiro.XequeReiPreto(false);
+		
+		return false;
+	}
+	
+	private boolean ChecaRoqueDireita()
+	{		
 		/* Peças a direita */
-		Peca p1 = tab.getPeca(pt0.getY() , pt0.getX() + 1 ) ;
-		Peca p2 = tab.getPeca(pt0.getY() , pt0.getX() + 2 ) ;
-		Peca Torre = tab.getPeca(pt0.getY() , pt0.getX() + 3 ) ;
+		Peca p1    = Tabuleiro.getPeca(pt0.getY() , pt0.getX() + 1 ) ;
+		Peca p2    = Tabuleiro.getPeca(pt0.getY() , pt0.getX() + 2 ) ;
+		Peca Torre = Tabuleiro.getPeca(pt0.getY() , pt0.getX() + 3 ) ;
 		
 		return (p1 == null) && (p2 == null) && ( !Torre.getSpecial() ) ;
 	}
 	
 	private boolean ChecaRoqueEsquerda()
-	{
-		Tabuleiro tab = Tabuleiro.getTabuleiro();
-		
+	{		
 		/* Peças a esquerda */
-		Peca p1 = tab.getPeca(pt0.getY() , pt0.getX() - 1 ) ;
-		Peca p2 = tab.getPeca(pt0.getY() , pt0.getX() - 2 ) ;
-		Peca p3 = tab.getPeca(pt0.getY() , pt0.getX() - 3 ) ;
-		Peca Torre = tab.getPeca(pt0.getY() , pt0.getX() - 4 ) ;
+		Peca p1    = Tabuleiro.getPeca(pt0.getY() , pt0.getX() - 1 ) ;
+		Peca p2    = Tabuleiro.getPeca(pt0.getY() , pt0.getX() - 2 ) ;
+		Peca p3    = Tabuleiro.getPeca(pt0.getY() , pt0.getX() - 3 ) ;
+		Peca Torre = Tabuleiro.getPeca(pt0.getY() , pt0.getX() - 4 ) ;
 		
 		return (p1 == null) && (p2 == null) && (p3 == null) && ( !Torre.getSpecial() ) ;
 	}
@@ -121,4 +176,5 @@ public class Rei implements Peca {
 	{
 		return movimentou;
 	}
+	
 }

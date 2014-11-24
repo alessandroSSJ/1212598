@@ -9,6 +9,7 @@
 
 package engine;
 
+import excecoes.AtacarPeca;
 import auxiliar.Ponto;
 
 public class Cavalo implements Peca {
@@ -32,10 +33,72 @@ public class Cavalo implements Peca {
 		pt0 = new Ponto( x , y ) ;
 	}
 	
+	public Cavalo( char lado , Ponto atual )
+	{
+		this.lado = lado ;
+		
+		pt0 = atual ;
+	}
+	
+	public boolean ChecaPosicionamento(int xFinal , int yFinal) throws AtacarPeca
+	{
+		boolean pode = pt0.AlinhadoL(new Ponto( xFinal , yFinal) ) ;
+		
+		comida = Tabuleiro.getPeca(yFinal , xFinal);
+		
+		if(pode && comida != null)
+			throw new AtacarPeca(xFinal , yFinal);
+		
+		return pode; 
+	}
+	
 	public boolean ChecaMovimentoPeca(int xFinal , int yFinal)
 	{
-		comida = Tabuleiro.getTabuleiro().getPeca(yFinal, xFinal) ;
-		return pt0.AlinhadoL(new Ponto( xFinal , yFinal) ) ;
+		boolean sePode = false;
+		try
+		{
+			sePode = ChecaPosicionamento(xFinal , yFinal);
+		}
+		catch(AtacarPeca a)
+		{
+			return true;
+		}
+		
+		return sePode;
+	}
+	
+	public boolean VefXeque() 
+	{
+		Ponto posRei;
+		if ( lado == 'b' )
+		{
+			posRei = Tabuleiro.getReiPreto();
+		}
+		else
+		{
+			posRei = Tabuleiro.getReiBranco();
+		}
+		
+		try
+		{
+			ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
+		}
+		catch(AtacarPeca a)
+		{
+			if(lado == 'p')
+				Tabuleiro.XequeReiBranco(true);
+			else
+				Tabuleiro.XequeReiPreto(true);
+			
+			return true;
+		}
+		
+		if(lado == 'p')
+			Tabuleiro.XequeReiBranco(false);
+		else
+			Tabuleiro.XequeReiPreto(false);
+		
+		return false;
 	}
 	
 	public void setPonto(int x, int y)

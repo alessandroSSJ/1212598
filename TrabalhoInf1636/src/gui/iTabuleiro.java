@@ -197,7 +197,7 @@ public class iTabuleiro extends JFrame implements MouseListener {
     /* Trata o ponto do primeiro click */
     private void ChecaOrigem(Ponto p) throws PecaOrigemNull , CorDePecaErrado
     {
-    	Peca orig = Tabuleiro.getTabuleiro().getPeca(p) ;
+    	Peca orig = Tabuleiro.getPeca(p) ;
     	
 		if ( orig == null )
 			throw new PecaOrigemNull();
@@ -208,9 +208,10 @@ public class iTabuleiro extends JFrame implements MouseListener {
     /** Trata o ponto do segundo click */
     private void ChecaDestino(Ponto p) throws PropriaPeca
     {
-    	Peca dest = Tabuleiro.getTabuleiro().getPeca(p) ;
+    	Peca dest = Tabuleiro.getPeca(p) ;
     	    	
 		if ( (dest != null) && (dest.getLado() == Tabuleiro.getVez()) )
 			throw new PropriaPeca();
     }
+    
 }

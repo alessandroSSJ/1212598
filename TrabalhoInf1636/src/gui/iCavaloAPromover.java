@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import engine.Tabuleiro;
 
 public class iCavaloAPromover extends JLayeredPane {
@@ -52,7 +53,7 @@ public class iCavaloAPromover extends JLayeredPane {
 			System.exit(1);
 		}
 		
-		g.drawImage( imPeca, 30 , 30 , WIDTH , HEIGHT, null ) ;
+		g.drawImage( imPeca, 3*iPromotion.getOffset() + 2*WIDTH , 20 , WIDTH , HEIGHT, null ) ;
 	}
 	
 }

@@ -10,11 +10,17 @@
 
 package gui;
 
-import java.awt.*      ; 
-import java.awt.geom.* ;
-import javax.swing.*   ;
-import engine.*        ;
-import auxiliar.*      ;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+
+import javax.swing.JLayeredPane;
+
+import auxiliar.Ponto;
+import engine.Peca;
+import engine.Tabuleiro;
+import excecoes.AtacarPeca;
 
 public class iFundo extends JLayeredPane {
 	
@@ -39,7 +45,8 @@ public class iFundo extends JLayeredPane {
 			{
 				leftPoint = i*WIDTH ;
 				rightPoint = j*HEIGHT ;
-				
+				boolean pintou = false;
+				boolean selecionou = false;
 				Graphics2D g2d = (Graphics2D) g;
 				
 				Rectangle2D rt = new Rectangle2D.Double(leftPoint , rightPoint , WIDTH , HEIGHT) ;
@@ -47,17 +54,71 @@ public class iFundo extends JLayeredPane {
 				/** Peça selecionada (Para pintar o retângulo de azul) */
 				Ponto orig = iTabuleiro.getOrig();
 				
-				if ( orig != null && orig.getX() == i && orig.getY() == ( Tabuleiro.getColunas() - 1 ) - j  )
-						g2d.setPaint(Color.blue);
+				Peca origem = Tabuleiro.getPeca(orig);
 				
-				else
+				if ( orig != null && orig.getX() == i && orig.getY() == ( Tabuleiro.getColunas() - 1 ) - j  )
+				{
+					selecionou = true;
+					g2d.setPaint(Color.blue);
+				}
+				else if ( origem != null)
+				{
+					boolean pode = false;
+					try
+					{
+						pode = origem.ChecaPosicionamento(i, ( Tabuleiro.getColunas() - 1 ) - j);
+					}
+					catch(AtacarPeca a)
+					{
+						if(Tabuleiro.getPeca(a.getPecaAtacada()).getLado() != origem.getLado() )
+						{
+							g2d.setPaint(Color.red);
+							pintou = true;
+						}
+					}
+					if ( pode && !pintou)
+					{
+						if ( j % 2 == 0 )
+						{
+							if( i % 2 == 0 )
+								g2d.setPaint(Color.gray);
+							else
+								g2d.setPaint(Color.LIGHT_GRAY);
+						}
+						else
+						{
+							if( i % 2 == 0)
+								g2d.setPaint(Color.LIGHT_GRAY);
+							else
+								g2d.setPaint(Color.gray);
+						}
+					}
+					else if(!pintou)
+					{
+						if ( j % 2 == 0 )
+						{
+							if( i % 2 == 0 )
+								g2d.setPaint(Color.WHITE);
+							else
+								g2d.setPaint(Color.BLACK);
+						}
+						else
+						{
+							if( i % 2 == 0)
+								g2d.setPaint(Color.BLACK);
+							else
+								g2d.setPaint(Color.WHITE);
+						}
+					}
+				}
+				else if(!pintou)
 				{
 					if ( j % 2 == 0 )
 					{
 						if( i % 2 == 0 )
-							g2d.setPaint(Color.WHITE)  ;
+							g2d.setPaint(Color.WHITE);
 						else
-							g2d.setPaint(Color.BLACK)  ;
+							g2d.setPaint(Color.BLACK);
 					}
 					else
 					{
@@ -66,7 +127,12 @@ public class iFundo extends JLayeredPane {
 						else
 							g2d.setPaint(Color.WHITE);
 					}
+					
 				}
+				if ( !selecionou && Tabuleiro.getXequeReiBranco() && Tabuleiro.getReiBranco().getX() == i && Tabuleiro.getReiBranco().getY() == ( Tabuleiro.getColunas() - 1 ) - j )
+					g2d.setPaint(Color.pink);
+				if ( !selecionou && Tabuleiro.getXequeReiPreto() && Tabuleiro.getReiPreto().getX() == i && Tabuleiro.getReiPreto().getY() == ( Tabuleiro.getColunas() - 1 ) - j )
+					g2d.setPaint(Color.pink);
 					
 				g2d.fill(rt);
 				

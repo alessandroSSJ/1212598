@@ -26,6 +26,7 @@ import excecoes.MovimentoInvalido;
 import excecoes.PecaOrigemNull;
 import excecoes.Promover;
 import excecoes.PropriaPeca;
+import excecoes.ReiEmXeque;
 import excecoes.RoqueDireita;
 import excecoes.RoqueEsquerda;
 import gui.iPromotion;
@@ -75,8 +76,8 @@ public class TabThread extends Thread{
 		Ponto ptOrig = iTabuleiro.getOrig();
 		Ponto ptDest = iTabuleiro.getDest();
 			
-		Peca pecaOrigem = tab.getPeca( ptOrig.getY() , ptOrig.getX() )  ;
-		Peca pecaDestino = tab.getPeca( ptDest.getY() , ptDest.getX() ) ;
+		Peca pecaOrigem = Tabuleiro.getPeca( ptOrig.getY() , ptOrig.getX() )  ;
+		Peca pecaDestino = Tabuleiro.getPeca( ptDest.getY() , ptDest.getX() ) ;
 		
 		/* Movimentação Das pesas */
 		
@@ -87,6 +88,35 @@ public class TabThread extends Thread{
 				
 			if (  pecaOrigem.ChecaMovimentoPeca(ptDest.getX(), ptDest.getY() ) != true )
 				throw new MovimentoInvalido();
+			
+ /* ***************************************** Verificar os xeques ************************************************* */
+			
+			if(Tabuleiro.getVez() == 'b' )
+			{
+				tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
+				
+				if ( Tabuleiro.ChecaXequeReiBranco() ) 
+				{
+					tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
+					throw new ReiEmXeque();
+				}
+				
+				tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
+			}
+			else
+			{
+				tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
+				
+				if ( Tabuleiro.ChecaXequeReiPreto() )
+				{
+					tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
+					throw new ReiEmXeque();
+				}
+				
+				tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;		
+			}
+			
+/* ************************************************************************************************************************ */
 			
 			if ( pecaDestino == null )
 			{
@@ -107,43 +137,54 @@ public class TabThread extends Thread{
 		}
 		catch(AoPassar e)
 		{
-			System.out.println(e.getMessage());
 			tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 			tab.ComePeca(pecaOrigem.pecaComida().getPonto());
 			clipMov.loop(1);
 		}
 		catch(RoqueDireita e)
 		{
-			System.out.println(e.getMessage());
 			tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptOrig.getY() , ptOrig.getX() + 2 ) ;
 			tab.ChangePeca(e.getY() , e.getX() , e.getY() , e.getX() - 2 ) ;
 			clipMov.loop(1);
 		} 
 		catch(RoqueEsquerda e)
 		{
-			System.out.println(e.getMessage());
 			tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptOrig.getY() , ptOrig.getX() - 2 ) ;
 			tab.ChangePeca(e.getY() , e.getX() , e.getY() , e.getX() + 3 ) ;
 			clipMov.loop(1);
 		}
 		catch(Promover e)
 		{
-			System.out.println(e.getMessage());
-		}
-		catch(MovimentoInvalido e)
-		{
-			iPromotion p = new iPromotion();
+			iPromotion p = new iPromotion(ptOrig);
 			p.DrawPecas();
 			
-			System.out.println(e.getMessage());
+			while( p.getPromovida() == null ) ;
+			
+			tab.CriaPeca(ptOrig, p.getPromovida());
+			
+			tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
+			
+			clipMov.loop(1);
+			
+			p.Close();
+			
+		}
+		catch(MovimentoInvalido e)
+		{	
+			//System.out.println(e.getMessage());
 			return;
 		}
 		catch(PecaOrigemNull e)
 		{
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 			return;
 		}
 		catch(PropriaPeca e)
+		{
+			//System.out.println(e.getMessage());
+			return;
+		}
+		catch(ReiEmXeque e)
 		{
 			System.out.println(e.getMessage());
 			return;
@@ -160,9 +201,21 @@ public class TabThread extends Thread{
 			iTabuleiro.ZerarRodada();
 		}	
 		
+		Tabuleiro.getPeca(ptDest).VefXeque() ;
+		
+		if ( Tabuleiro.getVez() == 'b' && Tabuleiro.getXequeReiPreto() && Tabuleiro.ChecaXequeMateReiPreto() )
+		{
+			System.out.printf("\n\nXEQUE MATE\nBRANCO WINS\n");
+		}
+		else if ( Tabuleiro.getVez() == 'p' && Tabuleiro.getXequeReiBranco() && Tabuleiro.ChecaXequeMateReiBranco() )
+		{
+			System.out.printf("XEQUE MATE\n PRETO WINS\n");
+		}
+		
+		Tabuleiro.getPeca(ptDest).VefXeque() ;
+		
 		Tabuleiro.ViraVez();
 		Tabuleiro.ComputaRodada();
-		
 		
 		/* *********************************************** */
 	}

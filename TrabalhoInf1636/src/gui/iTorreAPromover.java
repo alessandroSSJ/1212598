@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import engine.Tabuleiro;
 
 public class iTorreAPromover extends JLayeredPane {
@@ -52,7 +53,7 @@ public class iTorreAPromover extends JLayeredPane {
 			System.exit(1);
 		}
 		
-		g.drawImage( imPeca, 30 , 30 , WIDTH , HEIGHT, null ) ;
+		g.drawImage( imPeca, 2*iPromotion.getOffset() + WIDTH , 20 , WIDTH , HEIGHT, null ) ;
 	}
 	
 }

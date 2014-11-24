@@ -52,7 +52,7 @@ public class iDamaAPromover extends JLayeredPane {
 			System.exit(1);
 		}
 		
-		g.drawImage( imPeca, 40-50 , 30 , WIDTH , HEIGHT, null ) ;
+		g.drawImage( imPeca, iPromotion.getOffset() , 20 , WIDTH , HEIGHT, null ) ;
 	}
 	
 }

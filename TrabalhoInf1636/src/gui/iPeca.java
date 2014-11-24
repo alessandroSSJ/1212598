@@ -45,7 +45,7 @@ public class iPeca extends JLayeredPane {
 		for( i = 0 ; i < Tabuleiro.getLinhas() ; i++ )
 			for( j = 0; j < Tabuleiro.getColunas() ; j++)
 			{
-				Peca p = tab.getPeca(i, j) ;
+				Peca p = Tabuleiro.getPeca(i, j) ;
 				
 				if ( p != null ) /* null significa que não tem peça nenhuma naquela posição */
 				{

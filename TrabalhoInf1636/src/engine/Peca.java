@@ -19,9 +19,14 @@ public interface Peca {
 	/** Retorna a qual lado a devida peça pertençe */
 	public abstract char getLado();
 	
-	/** Verifica se a peça pode ir para uma dada posição 
-	 * @throws AoPassar , Promover */
+	/** Verifica se a peça pode ir para uma dada posição */
+	public abstract boolean ChecaPosicionamento(int xFinal , int yFinal) throws AtacarPeca;
+	
+	/** Verifica a movimentação da peça*/
 	public abstract boolean ChecaMovimentoPeca(int xFinal , int yFinal) throws AoPassar , Promover, RoqueDireita, RoqueEsquerda ;
+	
+	/** Verificar Xeque considerando posicao atual da peca */ 
+	public abstract boolean VefXeque() ;
 	
 	/** Retorna tipo de peça */
 	public abstract String getTipo();

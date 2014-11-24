@@ -8,15 +8,19 @@
 
 package gui;
 
-import engine.Tabuleiro;
-
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 
-public class iPromotion extends JFrame implements WindowListener {
+import auxiliar.Ponto;
+import engine.*;
+
+public class iPromotion extends JFrame implements WindowListener , MouseListener {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -24,11 +28,18 @@ public class iPromotion extends JFrame implements WindowListener {
 	private static final int HEIGHT =  100  ;
 	private static final int WIDTH =   300;
 	
-
+	/** Offset entre as peças na horizontal */
+	private static final int OFFSET = 25; 
 	
-	public iPromotion()
+	/** Peca a set promovida */
+	private Peca promovida = null;
+	private Ponto orig = null;
+	
+	public iPromotion(Ponto pt0)
 	{
-		super("Promoção de peão") ;
+		super("Qual peça você deseja promover?") ;
+		
+		orig = pt0;
 		
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		
@@ -38,12 +49,14 @@ public class iPromotion extends JFrame implements WindowListener {
 		int y = screenSize.height/2 - HEIGHT/2 ;
 		
 		setBounds(x,y,WIDTH,HEIGHT); /* Posiciona o tabuleiro no meio da tela do monitor */
+		setExtendedState(MAXIMIZED_BOTH);
 		
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		
 		setResizable(false);
 		
 		addWindowListener( (WindowListener) this);
+		addMouseListener( (MouseListener) this );
 	}
 
 	
@@ -57,58 +70,126 @@ public class iPromotion extends JFrame implements WindowListener {
 		
 		this.setVisible(true);
 		this.add(d) ;
+		this.setVisible(true) ;
 		this.add(t) ;
+		this.setVisible(true) ;
 		this.add(c) ;
+		this.setVisible(true) ;
 		this.add(b) ;
 	}
 
+	/** Retorna a altura do JFrame */
+	public static int getAltura()
+	{
+		return HEIGHT;
+	}
+	
+	/** Retorna a largura do JFrame */
+	public static int getLargura()
+	{
+		return WIDTH;
+	}
+	
+	/** Retorna o offset */
+	public static int getOffset()
+	{
+		return OFFSET;
+	}
+	
+	/** Retorna a peca promovida */
+	public Peca getPromovida()
+	{
+		return promovida;
+	}
 
+	/** Fecha a janela */
+	public void Close()
+	{
+		this.setVisible(false);
+		this.dispose();
+	}
+	
+	/** Implementa os tratadores da janela*/
+	
 	@Override
 	public void windowActivated(WindowEvent arg0) {
 		
 	}
-
-
 
 	@Override
 	public void windowClosed(WindowEvent arg0) {
 		
 	}
 
-
-
 	@Override
 	public void windowClosing(WindowEvent arg0) {
 		System.out.printf("Você deve escolher uma peça para promover\n");
 	}
-
-
 
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {
 		
 	}
 
-
-
 	@Override
 	public void windowDeiconified(WindowEvent arg0) {
 		
 	}
-
-
 
 	@Override
 	public void windowIconified(WindowEvent arg0) {
 		
 	}
 
-
-
 	@Override
 	public void windowOpened(WindowEvent arg0) {
 		
 	}
+	
+	/** Implementa os tratadores de mouse input */
+	
+	@Override
+    public void mouseClicked(MouseEvent e)
+	{
+		int xi = e.getX() ;
+		int yi = e.getY() ;
+		
+		if ( yi > 50 && yi < 90  )
+		{
+			if(xi > OFFSET && xi < OFFSET + 40)
+				promovida = new Dama(Tabuleiro.getVez() , orig);
+			else if(xi > 2*OFFSET + 40 && xi < 2*OFFSET + 80)
+				promovida = new Torre(Tabuleiro.getVez() , orig);
+			else if(xi > 3*OFFSET + 80 && xi < 3*OFFSET + 120)
+				promovida = new Cavalo(Tabuleiro.getVez() , orig);
+			else if(xi > 4*OFFSET + 120 && xi < 4*OFFSET + 160)
+				promovida = new Bispo(Tabuleiro.getVez() , orig);
+		}
+	}
+	
+	@Override
+    public void mousePressed(MouseEvent e) 
+	{
+		
+	}
+	
+    @Override
+    public void mouseEntered(MouseEvent e) 
+    {
+    	
+    }
+    
+    @Override
+    public void mouseExited(MouseEvent e)
+    {
+    	
+    }
+    
+    @Override
+    public void mouseReleased(MouseEvent e)
+    {
+    	
+    }
 	
 	
 }

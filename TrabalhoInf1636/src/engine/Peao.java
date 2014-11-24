@@ -39,97 +39,67 @@ public class Peao implements Peca {
 		pt0 = new Ponto(x,y) ;
 	}
 	
+	public boolean ChecaPosicionamento(int xFinal , int yFinal) throws AtacarPeca
+	{
+		boolean pode;
+		
+		try 
+		{
+			pode = SePode(xFinal , yFinal);
+		}
+		catch(AoPassar e)
+		{
+			if (lado == 'b')
+				throw new AtacarPeca(xFinal , yFinal-1);
+			else
+				throw new AtacarPeca(xFinal , yFinal+1);
+		}
+		catch(Promover e)
+		{
+			return true;
+		}
+		
+		return pode;
+	}
+	
 	private boolean SePode(int xFinal, int yFinal) throws AoPassar , Promover
 	{
 
 		int distX = pt0.getX() - xFinal ;
 		int distY = pt0.getY() - yFinal ;
-		boolean promove = false;
 		
-		/* Para próximas versões : Otimizar esse algoritmo, pois apesar de funcionar não está muito bem implementado */
-		
-		/* Implementação da promoção */
-		if ( lado == 'b' && pt0.getY() == 6 && yFinal == 7 )
-			promove = true;
-		else if ( lado == 'p' && pt0.getY() == 1 && yFinal == 0 )
-			promove = true;
-		
-		/* Implementação dos checa movimento especial dos peoes */
-		
-		/* Ao passar */
-		if ( lado == 'b' && distY < 0 && pt0.getY() == 4)
+		if ( lado == 'b' )
 		{
-			Peca pAnterior = Tabuleiro.getTabuleiro().getPeca(yFinal-1 , xFinal);
+			/* Promoção */
+			if ( pt0.getY() == 6 && yFinal == 7)
+				throw new Promover();
 			
-			comida = pAnterior ;
-			
-			if (pAnterior != null && pAnterior.getTipo() == "peao" && pAnterior.getLado() != lado && distX != 0)
+			/* Ao passar */
+			if ( distY == -1 && pt0.getY() == 4 )
 			{
-				if ( ( pt0.getY() == 4 && pAnterior.getSpecial() ) )
-					throw new AoPassar();
-			}
-		}
-		else if ( lado == 'p' && distY > 0 && pt0.getY() == 3 )
-		{
-			Peca pAnterior = Tabuleiro.getTabuleiro().getPeca(yFinal+1 , xFinal);
-			
-			comida = pAnterior ;
-			
-			if (pAnterior != null && pAnterior.getTipo() == "peao" && pAnterior.getLado() != lado && distX != 0)
-			{
-				if (pt0.getY() == 3 && pAnterior.getSpecial() )
-						throw new AoPassar();
-			}
-			
-		}
-		
-		/* Comer para onde não se move */
-		
-		Peca p = Tabuleiro.getTabuleiro().getPeca(yFinal, xFinal) ;
-		
-		comida = p;
-		
-		if ( p != null )
-		{
-			if ( lado == 'b' )
-			{
-				if ( ( distX == -1 || distX == 1 ) && distY == -1 )
-				{
-					if ( promove )
-						throw new Promover();
-					else
-						return true;
-				}
+				Peca pAnterior = Tabuleiro.getPeca(yFinal-1 , xFinal);
 				
-			}
-			else
-			{	
-				if ( ( distX == -1 || distX == 1 ) && distY == 1 )
+				comida = pAnterior ;
+				
+				if (pAnterior != null && pAnterior.getTipo() == "peao" && pAnterior.getLado() != lado && (distX == 1 || distX == -1))
 				{
-					if ( promove )
-						throw new Promover();
-					else
-						return true;
+					if ( ( pt0.getY() == 4 && pAnterior.getSpecial() ) )
+						throw new AoPassar();
 				}
 			}
-		}
-		
-		else
-		{
-			/* Movimentação para frente */
 			
-			if ( distX != 0 )
-				return false;
+			/* Movimentos normais */
 			
-			if ( lado == 'b' )
+			Peca p = Tabuleiro.getPeca(yFinal, xFinal) ;
+			
+			comida = p;
+			
+			if ( (p != null ) && ( distX == -1 || distX == 1 ) && distY == -1 )
+				return true;
+			else if( p == null && distX == 0 )
 			{
 				if ( distY == -1 )
-				{
-					if ( promove )
-						throw new Promover();
-					else
-						return true;
-				}
+					return true;
 				if ( pt0.getY() == 1 && distY == -2 && !PecaNoCaminho() )
 				{
 					pulou = true;
@@ -137,15 +107,43 @@ public class Peao implements Peca {
 					return true;
 				}
 			}
-			else if ( lado == 'p' )
+			
+			return false;
+		}
+		
+		else
+		{
+			/* Promoção */
+			if ( pt0.getY() == 1 && yFinal == 0)
+				throw new Promover();
+			
+			
+			/* Ao passar */ 
+			if ( distY == 1 && pt0.getY() == 3 )
+			{
+				Peca pAnterior = Tabuleiro.getPeca(yFinal+1 , xFinal);
+				
+				comida = pAnterior ;
+				
+				if (pAnterior != null && pAnterior.getTipo() == "peao" && pAnterior.getLado() != lado && (distX == 1 || distX == -1))
+				{
+					if ( ( pt0.getY() == 3 && pAnterior.getSpecial() ) )
+						throw new AoPassar();
+				}
+			}
+			
+			/* Movimentos normais */
+			
+			Peca p = Tabuleiro.getPeca(yFinal, xFinal) ;
+			
+			comida = p;
+			
+			if ( (p != null ) && ( distX == -1 || distX == 1 ) && distY == 1 )
+				return true;
+			else if( p == null && distX == 0 )
 			{
 				if ( distY == 1 )
-				{
-					if ( promove )
-						throw new Promover();
-					else
-						return true;
-				}
+					return true;
 				if ( pt0.getY() == 6 && distY == 2 && !PecaNoCaminho() )
 				{
 					pulou = true;
@@ -153,9 +151,11 @@ public class Peao implements Peca {
 					return true;
 				}
 			}
+			
+			return false;
+			
 		}
 		
-		return false;
 	}
 	
 	public boolean ChecaMovimentoPeca(int xFinal , int yFinal) throws AoPassar , Promover
@@ -178,13 +178,50 @@ public class Peao implements Peca {
 		return checa;
 	}
 	
+	public boolean VefXeque() 
+	{
+		Ponto posRei;
+		
+		boolean sePode = false ;
+		
+		if ( lado == 'b' )
+		{
+			posRei = Tabuleiro.getReiPreto();
+		}
+		else
+		{
+			posRei = Tabuleiro.getReiBranco();
+		}
+		
+		try
+		{
+			sePode = ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
+		}
+		catch(AtacarPeca a)
+		{
+			if(lado == 'p')
+				Tabuleiro.XequeReiBranco(true);
+			else
+				Tabuleiro.XequeReiPreto(true);
+			
+			return true;
+		}
+		
+		if(lado == 'p')
+			Tabuleiro.XequeReiBranco(false);
+		else
+			Tabuleiro.XequeReiPreto(false);
+		
+		return sePode;
+	}
+	
 	private boolean PecaNoCaminho()
 	{
 		Peca teste;
 		if ( lado == 'b' )
-			teste = Tabuleiro.getTabuleiro().getPeca(pt0.getY()+1 , pt0.getX());
+			teste = Tabuleiro.getPeca(pt0.getY()+1 , pt0.getX());
 		else
-			teste = Tabuleiro.getTabuleiro().getPeca(pt0.getY()-1 , pt0.getX());
+			teste = Tabuleiro.getPeca(pt0.getY()-1 , pt0.getX());
 		
 		if(teste != null)
 			return true; /*Existe peca no caminho*/
