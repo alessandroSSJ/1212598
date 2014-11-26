@@ -59,6 +59,9 @@ public class Peao implements Peca {
 			return true;
 		}
 		
+		if ( comida != null && pode )
+			throw new AtacarPeca(comida.getPonto());
+		
 		return pode;
 	}
 	
@@ -71,7 +74,7 @@ public class Peao implements Peca {
 		if ( lado == 'b' )
 		{
 			/* Promoção */
-			if ( pt0.getY() == 6 && yFinal == 7)
+			if ( pt0.getY() == 6 && yFinal == 7 && distX == 0)
 				throw new Promover();
 			
 			/* Ao passar */
@@ -114,7 +117,7 @@ public class Peao implements Peca {
 		else
 		{
 			/* Promoção */
-			if ( pt0.getY() == 1 && yFinal == 0)
+			if ( pt0.getY() == 1 && yFinal == 0 && distX == 0)
 				throw new Promover();
 			
 			
@@ -181,9 +184,6 @@ public class Peao implements Peca {
 	public boolean VefXeque() 
 	{
 		Ponto posRei;
-		
-		boolean sePode = false ;
-		
 		if ( lado == 'b' )
 		{
 			posRei = Tabuleiro.getReiPreto();
@@ -195,24 +195,14 @@ public class Peao implements Peca {
 		
 		try
 		{
-			sePode = ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
+			ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
 		}
 		catch(AtacarPeca a)
-		{
-			if(lado == 'p')
-				Tabuleiro.XequeReiBranco(true);
-			else
-				Tabuleiro.XequeReiPreto(true);
-			
+		{	
 			return true;
 		}
 		
-		if(lado == 'p')
-			Tabuleiro.XequeReiBranco(false);
-		else
-			Tabuleiro.XequeReiPreto(false);
-		
-		return sePode;
+		return false;
 	}
 	
 	private boolean PecaNoCaminho()

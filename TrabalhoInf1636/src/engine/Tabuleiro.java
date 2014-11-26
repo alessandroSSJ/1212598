@@ -11,7 +11,6 @@
 
 package engine;
 
-import java.util.Vector;
 
 import auxiliar.Ponto;
 
@@ -49,6 +48,10 @@ public class Tabuleiro {
 	{
 		int i;
 		pecas = new Peca[LINHAS][COLUNAS] ;
+		
+		for(i = 0 ; i < COLUNAS ; i++)
+			for(int j = 0 ; j < LINHAS ; j++)
+				pecas[i][j] = null;
 		
 		/* Alocação dos peões */
 		for ( i = 0 ; i < COLUNAS ; i++ )
@@ -116,13 +119,52 @@ public class Tabuleiro {
 		Peca orig = pecas[linhaO][colunaO];
 		Peca dest = pecas[linhaD][colunaD];
 		
+		//System.out.printf("Peca1 : "); System.out.println(orig.getTipo());
+		//if (dest!=null) {System.out.printf("Peca2 : "); System.out.println(dest.getTipo());} else System.out.printf("Peca2 : null\n");
+		
 		orig.setPonto(colunaD,linhaD);
 		
+
 		if ( dest != null )
+		{
+			if(dest.getTipo() == "rei")
+				System.out.printf("TOMA NO SEU CU MOTHAFUCK FDPPPPPP\n");
+			
+			System.out.printf("ANTES\nRei branco: (%d,%d)\nRei Preto: (%d,%d)\n" , reiBranco.getX() , reiBranco.getY() , reiPreto.getX() , reiPreto.getY() );
+			
 			dest.setPonto(colunaO,linhaO);
+			
+			System.out.printf("DEPOIS\nRei branco: (%d,%d)\nRei Preto: (%d,%d)\n" , Tabuleiro.getReiBranco().getX() , Tabuleiro.getReiBranco().getY() , Tabuleiro.getReiPreto().getX() , Tabuleiro.getReiPreto().getY() );
+
+		}
 		
-		pecas[linhaD][colunaD] = pecas[linhaO][colunaO];
+		
+		pecas[linhaD][colunaD] = orig;
 		pecas[linhaO][colunaO] = temp;
+				
+		Peca corrig = Tabuleiro.getPeca(linhaO , colunaO);
+		
+		if (corrig != null &&  corrig.getTipo() == "rei" )
+		{
+			if ( corrig.getLado() == 'b' )
+				Tabuleiro.setReiBranco(colunaO , linhaO);
+			else
+				Tabuleiro.setReiPreto(colunaO , linhaO);
+		}
+		
+		corrig = Tabuleiro.getPeca(linhaD , colunaD);
+		
+		if ( corrig != null &&  corrig.getTipo() == "rei" )
+		{
+			if ( corrig.getLado() == 'b' )
+				Tabuleiro.setReiBranco(colunaD , linhaD);
+			else
+				Tabuleiro.setReiPreto(colunaD , linhaD);
+		}
+		
+		//if( pecas[linhaO][colunaO]!=null ) {System.out.printf("Peca1 : "); System.out.println(pecas[linhaO][colunaO].getTipo());} else System.out.printf("Peca1 : null\n");
+		//if( pecas[linhaO][colunaO]!=null ) {System.out.printf("Peca2 : "); System.out.println(pecas[linhaD][colunaD].getTipo());} else System.out.printf("Peca2 : null\n");
+
 	}
 	
 	/** Retira uma peca do tabuleiro*/
@@ -205,8 +247,19 @@ public class Tabuleiro {
 			{
 				Peca atual = pecas[j][i];
 				if ( atual != null && atual.getLado() == lado && atual.VefXeque())
+				{
+					if ( lado == 'b' )
+						Tabuleiro.XequeReiPreto(true);
+					else
+						Tabuleiro.XequeReiBranco(true);
 					return true;
+				}
 			}
+		
+		if ( lado == 'b' )
+			Tabuleiro.XequeReiPreto(false);
+		else
+			Tabuleiro.XequeReiBranco(false);
 		
 		return false;
 	}
@@ -246,9 +299,7 @@ public class Tabuleiro {
 		
 		if ( numPecasXeque == 0 ) /* Se ninguem esta dando xeque, xeque mate é falso */
 			return false;
-		
-		System.out.printf("SIMPLES XEQUE OK\n");
-		
+
 		/* ********************************************************************** */
 		
 		/* Verificando se rei pode se mover (Xeque nas redondezas) */
@@ -271,6 +322,7 @@ public class Tabuleiro {
 		for(int z = 0 ; z < 9 ; z ++)
 		{
 			boolean flag = false;
+			boolean posInvalida = false;
 			int direcaoX;
 			int direcaoY;
 			
@@ -296,9 +348,12 @@ public class Tabuleiro {
 			if ( (direcaoX >= 0) && (direcaoY >= 0) && (direcaoX <= 7) && (direcaoY <= 7) )
 				redondeza = Tabuleiro.getPeca(direcaoY , direcaoX);
 			else
+			{
 				redondeza = null;
+				posInvalida = true;
+			}
 			
-			if ( redondeza != null && redondeza.getLado() == lado )
+			if ( (redondeza != null && redondeza.getLado() == lado) || ( redondeza == null && !posInvalida ) )
 			{
 				if ( lado == 'p' )
 					Tabuleiro.setReiBranco(xOriginal + indexX , yOriginal + indexY );
@@ -309,7 +364,7 @@ public class Tabuleiro {
 					for ( i = 0 ; i < Tabuleiro.getColunas() && !flag ; i++)
 					{
 						Peca atual = pecas[j][i];
-						if ( atual != null && atual.getLado() == lado && atual.VefXeque())
+						if ( atual != null && atual.getLado() == lado && atual != redondeza && atual.VefXeque())
 						{
 							numXequesRedondezas++;
 							flag = true;
@@ -331,8 +386,6 @@ public class Tabuleiro {
 		if ( numXequesRedondezas < 9 ) /* Se existem menos de 9 */
 			return false;
 		
-		System.out.printf("REI NÃO PODE SE MOVER!!!\n");
-		
 		/* ***************************************************************************************** */
 		
 		
@@ -345,6 +398,14 @@ public class Tabuleiro {
 		/* Para isso, posiciona-se o rei no lugar dessa peça, e checa se alguma peça da
 		 * xeque nesse "rei virtual" */
 		
+		if (lado == 'p')
+			posOriginal = Tabuleiro.getReiPreto();
+		else
+			posOriginal = Tabuleiro.getReiBranco();
+		
+		xOriginal = posOriginal.getX();
+		yOriginal = posOriginal.getY();
+		
 		if ( lado == 'b' )
 			Tabuleiro.setReiBranco(pecasDeXeque[0].getPonto());
 		else
@@ -354,14 +415,16 @@ public class Tabuleiro {
 			for ( i = 0 ; i < Tabuleiro.getColunas() ; i++)
 			{
 				Peca atual = pecas[j][i];
-				if ( atual != null && atual.getLado() != lado && atual.VefXeque())
+				if ( atual != null && atual.getLado() != lado && atual.getTipo()!="rei" && atual.VefXeque())
 				{
 					if ( lado == 'b' )
 						Tabuleiro.setReiBranco(xOriginal , yOriginal );
 					else
 						Tabuleiro.setReiPreto(xOriginal , yOriginal );     /* Retorna rei para sua posição de origem */
 					
-					return false; /* pelo menos uma peça pode comer a única de xeque, não é mate */
+				//	System.out.printf("Rei branco: (%d,%d)\nRei Preto: (%d,%d)\n" , Tabuleiro.getReiBranco().getX() , Tabuleiro.getReiBranco().getY() , Tabuleiro.getReiPreto().getX() , Tabuleiro.getReiPreto().getY() );
+					
+					return false ; /* pelo menos uma peça pode comer a única de xeque, não é mate */
 				}
 			}
 		
@@ -369,6 +432,8 @@ public class Tabuleiro {
 			Tabuleiro.setReiBranco(xOriginal , yOriginal );
 		else
 			Tabuleiro.setReiPreto(xOriginal , yOriginal );     /* Retorna rei para sua posição de origem */
+		
+		//System.out.printf("Rei branco: (%d,%d)\nRei Preto: (%d,%d)\n" , Tabuleiro.getReiBranco().getX() , Tabuleiro.getReiBranco().getY() , Tabuleiro.getReiPreto().getX() , Tabuleiro.getReiPreto().getY() );
 		
 		System.out.printf("NINGUEM PODE COMER A PECA\n");
 	
@@ -387,11 +452,8 @@ public class Tabuleiro {
 		 * ainda pode acontecer de alguma peça poder se colocar na frente dela! */
 
 		
-	    return false;	
-		
-		
-		
-		
+	    return true;	
+			
 	}
 	
 	/** Le a variável de xeque do rei branco */
@@ -433,24 +495,28 @@ public class Tabuleiro {
 	/** Atualiza Posição do rei branco */
 	public static void setReiBranco(int x , int y)
 	{
+		System.out.printf("FUI EXECUTADO : REI BRANCO VAI PARA : (%d,%d)\n" , x,y);
 		reiBranco.setX(x);
 		reiBranco.setY(y);
 	}
 	
 	public static void setReiBranco(Ponto novaPos)
 	{
+		System.out.printf("FUI EXECUTADO : REI BRANCO VAI PARA : (%d,%d)\n" , novaPos.getX(),novaPos.getY());
 		reiBranco = novaPos;
 	}
 	
 	/** Atualiza Posição do rei preto */
 	public static void setReiPreto(int x , int y)
 	{
+		System.out.printf("FUI EXECUTADO : REI PRETO VAI PARA : (%d,%d)\n" , x,y);
 		reiPreto.setX(x);
 		reiPreto.setY(y);
 	}
 	
 	public static void setReiPreto(Ponto novaPos)
 	{
+		System.out.printf("FUI EXECUTADO : REI PRETO VAI PARA : (%d,%d)\n" , novaPos.getX(),novaPos.getY());
 		reiPreto = novaPos;
 	}
 	

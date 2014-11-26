@@ -70,6 +70,7 @@ public class Cavalo implements Peca {
 	public boolean VefXeque() 
 	{
 		Ponto posRei;
+		
 		if ( lado == 'b' )
 		{
 			posRei = Tabuleiro.getReiPreto();
@@ -78,25 +79,14 @@ public class Cavalo implements Peca {
 		{
 			posRei = Tabuleiro.getReiBranco();
 		}
-		
 		try
 		{
 			ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
 		}
 		catch(AtacarPeca a)
-		{
-			if(lado == 'p')
-				Tabuleiro.XequeReiBranco(true);
-			else
-				Tabuleiro.XequeReiPreto(true);
-			
+		{	
 			return true;
 		}
-		
-		if(lado == 'p')
-			Tabuleiro.XequeReiBranco(false);
-		else
-			Tabuleiro.XequeReiPreto(false);
 		
 		return false;
 	}

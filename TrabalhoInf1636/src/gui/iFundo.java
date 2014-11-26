@@ -55,7 +55,7 @@ public class iFundo extends JLayeredPane {
 				Ponto orig = iTabuleiro.getOrig();
 				
 				Peca origem = Tabuleiro.getPeca(orig);
-				
+							
 				if ( orig != null && orig.getX() == i && orig.getY() == ( Tabuleiro.getColunas() - 1 ) - j  )
 				{
 					selecionou = true;

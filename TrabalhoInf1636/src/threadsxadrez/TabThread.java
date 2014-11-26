@@ -78,45 +78,64 @@ public class TabThread extends Thread{
 			
 		Peca pecaOrigem = Tabuleiro.getPeca( ptOrig.getY() , ptOrig.getX() )  ;
 		Peca pecaDestino = Tabuleiro.getPeca( ptDest.getY() , ptDest.getX() ) ;
-		
-		/* Movimentação Das pesas */
+
+		/* Movimentação das peças */
 		
 		try
 		{
 			if( pecaOrigem == null)
 				throw new PecaOrigemNull();
-				
+			
 			if (  pecaOrigem.ChecaMovimentoPeca(ptDest.getX(), ptDest.getY() ) != true )
 				throw new MovimentoInvalido();
 			
  /* ***************************************** Verificar os xeques ************************************************* */
-			
+	
 			if(Tabuleiro.getVez() == 'b' )
 			{
+				Peca temp = pecaOrigem.pecaComida();
+				
+				if ( temp != null )
+					tab.ComePeca(temp.getPonto());
+				
 				tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 				
 				if ( Tabuleiro.ChecaXequeReiBranco() ) 
 				{
 					tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
+					tab.CriaPeca(ptDest , temp);
+					
 					throw new ReiEmXeque();
 				}
 				
 				tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
+				tab.CriaPeca(ptDest , temp);
 			}
 			else
 			{
+				Peca temp = pecaOrigem.pecaComida();
+				
+				if ( temp != null )
+					tab.ComePeca(temp.getPonto());
+				
 				tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 				
 				if ( Tabuleiro.ChecaXequeReiPreto() )
 				{
 					tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
+					tab.CriaPeca(ptDest , temp);
+					
 					throw new ReiEmXeque();
 				}
 				
-				tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;		
+				tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
+				
+				tab.CriaPeca(ptDest , temp);
 			}
 			
 /* ************************************************************************************************************************ */
+			if (  pecaOrigem.ChecaMovimentoPeca(ptDest.getX(), ptDest.getY() ) != true )
+				throw new MovimentoInvalido();
 			
 			if ( pecaDestino == null )
 			{
@@ -130,10 +149,15 @@ public class TabThread extends Thread{
 					throw new PropriaPeca();
 				}
 				
-				tab.ComePeca(pecaOrigem.pecaComida().getPonto());
+				if ( pecaOrigem.pecaComida() != null )
+					tab.ComePeca(pecaOrigem.pecaComida().getPonto());
+				else
+					System.out.printf("Algum erro estranho\n");
+				
 				tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 				clipMov.loop(1);
 		    }
+			
 		}
 		catch(AoPassar e)
 		{
@@ -158,7 +182,7 @@ public class TabThread extends Thread{
 			iPromotion p = new iPromotion(ptOrig);
 			p.DrawPecas();
 			
-			while( p.getPromovida() == null ) ;
+			while( p.getPromovida() == null ) System.out.printf("Aguardando escolha\n") ;
 			
 			tab.CriaPeca(ptOrig, p.getPromovida());
 			
@@ -170,18 +194,16 @@ public class TabThread extends Thread{
 			
 		}
 		catch(MovimentoInvalido e)
-		{	
-			//System.out.println(e.getMessage());
+		{
+			System.out.println(e.getMessage());	
 			return;
 		}
 		catch(PecaOrigemNull e)
 		{
-			//System.out.println(e.getMessage());
 			return;
 		}
 		catch(PropriaPeca e)
 		{
-			//System.out.println(e.getMessage());
 			return;
 		}
 		catch(ReiEmXeque e)
@@ -201,8 +223,24 @@ public class TabThread extends Thread{
 			iTabuleiro.ZerarRodada();
 		}	
 		
-		Tabuleiro.getPeca(ptDest).VefXeque() ;
+  /* ********************* Checa se o outro rei foi deixado em xeque! ********************************* */
 		
+	 	if( Tabuleiro.getVez() == 'b'){
+			if (Tabuleiro.ChecaXequeReiPreto() )
+	 			System.out.printf("XEQUE REI PRETO\n");}
+		else
+			if (Tabuleiro.ChecaXequeReiBranco())
+				System.out.printf("XEQUE REI BRANCO\n");
+	 	
+  /* ************************************************************************************************** */
+	 	
+	 	if (Tabuleiro.getXequeReiBranco())
+	 		System.out.printf("CHEQUE REI BRANCO\n");
+	 	if (Tabuleiro.getXequeReiPreto())
+	 		System.out.printf("CHEQUE REI PRETO\n");
+	 	
+  /* ******************************* Checa se ocorreu xeque mate **************************************** */ 	
+		/*
 		if ( Tabuleiro.getVez() == 'b' && Tabuleiro.getXequeReiPreto() && Tabuleiro.ChecaXequeMateReiPreto() )
 		{
 			System.out.printf("\n\nXEQUE MATE\nBRANCO WINS\n");
@@ -210,13 +248,17 @@ public class TabThread extends Thread{
 		else if ( Tabuleiro.getVez() == 'p' && Tabuleiro.getXequeReiBranco() && Tabuleiro.ChecaXequeMateReiBranco() )
 		{
 			System.out.printf("XEQUE MATE\n PRETO WINS\n");
-		}
+		}*/
 		
-		Tabuleiro.getPeca(ptDest).VefXeque() ;
+  /* ************************************************************************************************************** */		
+	 	
+	System.out.printf("AS REAIS : \nRei branco: (%d,%d)\nRei Preto: (%d,%d)\n" , Tabuleiro.getReiBranco().getX() , Tabuleiro.getReiBranco().getY() , Tabuleiro.getReiPreto().getX() , Tabuleiro.getReiPreto().getY() );
+		
+		/* Vira a rodada */
 		
 		Tabuleiro.ViraVez();
 		Tabuleiro.ComputaRodada();
-		
+		System.out.printf("FIM DA RODADA ************************************************\n");
 		/* *********************************************** */
 	}
 	

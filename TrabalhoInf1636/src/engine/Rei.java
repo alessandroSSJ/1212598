@@ -10,7 +10,9 @@
 package engine;
 
 import auxiliar.Ponto;
-import excecoes.*;
+import excecoes.AtacarPeca;
+import excecoes.RoqueDireita;
+import excecoes.RoqueEsquerda;
 
 public class Rei implements Peca {
 	
@@ -36,9 +38,17 @@ public class Rei implements Peca {
 		pt0 = new Ponto( x , y ) ;
 	}
 	
-	public boolean ChecaPosicionamento(int xFinal , int yFinal)
+	public boolean ChecaPosicionamento(int xFinal , int yFinal) throws AtacarPeca
 	{
-		return false;
+		boolean pode = pt0.Vizinho(new Ponto( xFinal , yFinal) ) ;
+		
+		comida = Tabuleiro.getPeca(yFinal , xFinal);
+		
+		if(pode && comida != null)
+			throw new AtacarPeca(xFinal , yFinal);
+		
+		return pode; 
+		
 	}
 	
 	public boolean ChecaMovimentoPeca(int xFinal , int yFinal) throws RoqueDireita, RoqueEsquerda
@@ -53,23 +63,12 @@ public class Rei implements Peca {
 		{
 			if( distX == -2 && ChecaRoqueDireita() )
 			{
-				movimentou = true;
-				
-				if ( lado == 'b' )
-					Tabuleiro.setReiBranco(xFinal , yFinal);
-				else
-					Tabuleiro.setReiPreto(xFinal , yFinal);
-				
+				movimentou = true;		
 				throw new RoqueDireita(pt0.getX() + 3 , pt0.getY() );
 			}
 			else if( distX == 2 && ChecaRoqueEsquerda() )
 			{
 				movimentou = true;
-				
-				if ( lado == 'b' )
-					Tabuleiro.setReiBranco(xFinal , yFinal);
-				else
-					Tabuleiro.setReiPreto(xFinal , yFinal);
 				throw new RoqueEsquerda(pt0.getX() - 4 , pt0.getY() );
 			}
 		}
@@ -79,20 +78,14 @@ public class Rei implements Peca {
 		if ( !movimentou )
 			movimentou = sePode;
 		
-		if ( sePode )
-		{
-			if ( lado == 'b' )
-				Tabuleiro.setReiBranco(xFinal , yFinal);
-			else
-				Tabuleiro.setReiPreto(xFinal , yFinal);
-		}
-		
 		return sePode;
 	}
 	
 	public boolean VefXeque() 
 	{
 		Ponto posRei;
+		
+		boolean sePode = false ;
 		
 		if ( lado == 'b' )
 		{
@@ -105,24 +98,14 @@ public class Rei implements Peca {
 		
 		try
 		{
-			ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
+			sePode = ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
 		}
-		catch(Exception a)
-		{
-			if(lado == 'p')
-				Tabuleiro.XequeReiBranco(true);
-			else
-				Tabuleiro.XequeReiPreto(true);
-			
+		catch(AtacarPeca a)
+		{	
 			return true;
 		}
 		
-		if(lado == 'p')
-			Tabuleiro.XequeReiBranco(false);
-		else
-			Tabuleiro.XequeReiPreto(false);
-		
-		return false;
+		return sePode;
 	}
 	
 	private boolean ChecaRoqueDireita()

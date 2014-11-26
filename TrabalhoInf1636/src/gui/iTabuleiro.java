@@ -130,12 +130,10 @@ public class iTabuleiro extends JFrame implements MouseListener {
 			}
 			catch(PecaOrigemNull pn)
 			{
-				System.out.println(pn.getMessage());
 				ptOrig = null;
 			}
 			catch(CorDePecaErrado pn)
 			{
-				System.out.println(pn.getMessage());
 				ptOrig = null;
 			}
 			catch(Exception ex)
@@ -154,7 +152,6 @@ public class iTabuleiro extends JFrame implements MouseListener {
 		    }
 		    catch(PropriaPeca e1)
 		    {
-				System.out.println(e1.getMessage());
 		    	ptOrig = ptDest;
 		    	ptDest = null;
 		    	return;
@@ -165,7 +162,6 @@ public class iTabuleiro extends JFrame implements MouseListener {
 		    	e3.printStackTrace();
 		    	System.exit(1);
 		    }
-		    
 		    setJogadaValida(true);
 		}
 	}
