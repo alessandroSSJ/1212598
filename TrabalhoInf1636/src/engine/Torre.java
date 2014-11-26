@@ -34,6 +34,8 @@ public class Torre implements Peca {
 		this.lado = lado ;
 		
 		pt0 = new Ponto( x , y ) ;
+		
+		comida = null;
 	}
 	
 	public Torre( char lado , Ponto atual )
@@ -41,14 +43,15 @@ public class Torre implements Peca {
 		this.lado = lado ;
 		
 		pt0 = atual ;
+		
+		comida = null;
 	}
 	
 	public boolean ChecaPosicionamento(int xFinal , int yFinal) throws AtacarPeca 
 	{
 		boolean pode = ( pt0.AlinhadoVH(new Ponto( xFinal , yFinal) ) && !PecaNoCaminho(xFinal , yFinal) ) ;
-		comida = Tabuleiro.getPeca(yFinal , xFinal);
 		
-		if(pode && comida != null)
+		if(pode && Tabuleiro.getPeca(yFinal , xFinal) != null)
 			throw new AtacarPeca(xFinal , yFinal);
 		
 		return pode; 
@@ -64,12 +67,16 @@ public class Torre implements Peca {
 		}
 		catch(AtacarPeca e)
 		{
+			comida = Tabuleiro.getPeca(yFinal , xFinal);
+			
 			if ( movimentou )
 				return  true ;
 			
 			movimentou = true ;
 			return true;
 		}
+		
+		comida = Tabuleiro.getPeca(yFinal , xFinal);
 		
 		if ( movimentou )
 			return  sePode ;
@@ -81,6 +88,8 @@ public class Torre implements Peca {
 	public boolean VefXeque() 
 	{
 		Ponto posRei;
+		Peca temp = comida;
+		
 		if ( lado == 'b' )
 		{
 			posRei = Tabuleiro.getReiPreto();
@@ -95,20 +104,12 @@ public class Torre implements Peca {
 			ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
 		}
 		catch(AtacarPeca a)
-		{
-			if(lado == 'p')
-				Tabuleiro.XequeReiBranco(true);
-			else
-				Tabuleiro.XequeReiPreto(true);
-			
+		{	
+			comida = temp;
 			return true;
 		}
 		
-		if(lado == 'p')
-			Tabuleiro.XequeReiBranco(false);
-		else
-			Tabuleiro.XequeReiPreto(false);
-		
+		comida = temp;
 		return false;
 	}
 	

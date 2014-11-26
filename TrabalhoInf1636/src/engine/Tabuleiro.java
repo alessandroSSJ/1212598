@@ -125,19 +125,8 @@ public class Tabuleiro {
 		orig.setPonto(colunaD,linhaD);
 		
 
-		if ( dest != null )
-		{
-			if(dest.getTipo() == "rei")
-				System.out.printf("TOMA NO SEU CU MOTHAFUCK FDPPPPPP\n");
-			
-			System.out.printf("ANTES\nRei branco: (%d,%d)\nRei Preto: (%d,%d)\n" , reiBranco.getX() , reiBranco.getY() , reiPreto.getX() , reiPreto.getY() );
-			
+		if ( dest != null )			
 			dest.setPonto(colunaO,linhaO);
-			
-			System.out.printf("DEPOIS\nRei branco: (%d,%d)\nRei Preto: (%d,%d)\n" , Tabuleiro.getReiBranco().getX() , Tabuleiro.getReiBranco().getY() , Tabuleiro.getReiPreto().getX() , Tabuleiro.getReiPreto().getY() );
-
-		}
-		
 		
 		pecas[linhaD][colunaD] = orig;
 		pecas[linhaO][colunaO] = temp;
@@ -495,28 +484,24 @@ public class Tabuleiro {
 	/** Atualiza Posição do rei branco */
 	public static void setReiBranco(int x , int y)
 	{
-		System.out.printf("FUI EXECUTADO : REI BRANCO VAI PARA : (%d,%d)\n" , x,y);
 		reiBranco.setX(x);
 		reiBranco.setY(y);
 	}
 	
 	public static void setReiBranco(Ponto novaPos)
 	{
-		System.out.printf("FUI EXECUTADO : REI BRANCO VAI PARA : (%d,%d)\n" , novaPos.getX(),novaPos.getY());
 		reiBranco = novaPos;
 	}
 	
 	/** Atualiza Posição do rei preto */
 	public static void setReiPreto(int x , int y)
 	{
-		System.out.printf("FUI EXECUTADO : REI PRETO VAI PARA : (%d,%d)\n" , x,y);
 		reiPreto.setX(x);
 		reiPreto.setY(y);
 	}
 	
 	public static void setReiPreto(Ponto novaPos)
 	{
-		System.out.printf("FUI EXECUTADO : REI PRETO VAI PARA : (%d,%d)\n" , novaPos.getX(),novaPos.getY());
 		reiPreto = novaPos;
 	}
 	

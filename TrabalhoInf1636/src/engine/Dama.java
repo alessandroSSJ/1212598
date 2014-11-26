@@ -31,6 +31,8 @@ public class Dama implements Peca {
 		this.lado = lado ;
 		
 		pt0 = new Ponto( x , y ) ;
+		
+		comida = null;
 	}
 	
 	public Dama( char lado , Ponto atual )
@@ -38,6 +40,8 @@ public class Dama implements Peca {
 		this.lado = lado ;
 		
 		pt0 = atual ;
+		
+		comida = null;
 	}
 	
 	public boolean ChecaPosicionamento(int xFinal , int yFinal) throws AtacarPeca
@@ -46,9 +50,7 @@ public class Dama implements Peca {
 		
 		boolean pode = ( ( pt0.AlinhadoVH( pFinal ) || pt0.AlinhadoIncl(pFinal) ) && !PecaNoCaminho(xFinal , yFinal) )  ;
 		
-		comida = Tabuleiro.getPeca(yFinal , xFinal);
-		
-		if(pode && comida != null)
+		if(pode && Tabuleiro.getPeca(yFinal , xFinal) != null)
 			throw new AtacarPeca(xFinal , yFinal);
 		
 		return pode; 
@@ -63,15 +65,19 @@ public class Dama implements Peca {
 		}
 		catch(AtacarPeca a)
 		{
+			comida = Tabuleiro.getPeca(yFinal , xFinal);
 			return true;
 		}
 		
+		comida = Tabuleiro.getPeca(yFinal , xFinal);
 		return sePode;
 	}
 	
 	public boolean VefXeque() 
 	{
 		Ponto posRei;
+		Peca temp = comida;
+		
 		if ( lado == 'b' )
 		{
 			posRei = Tabuleiro.getReiPreto();
@@ -87,9 +93,11 @@ public class Dama implements Peca {
 		}
 		catch(AtacarPeca a)
 		{	
+			comida = temp;
 			return true;
 		}
 		
+		comida = temp;
 		return false;
 	}
 	

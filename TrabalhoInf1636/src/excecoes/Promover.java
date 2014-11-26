@@ -13,14 +13,30 @@
 
 package excecoes;
 
+import auxiliar.Ponto;
+
 public class Promover extends Exception{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
+	private Ponto comer;
+	
 	public Promover()
 	{
 		super("Promoção de peão");
+		comer = null;
+	}
+	
+	public Promover(Ponto p)
+	{
+		super("Promoção de peão");
+		comer = p;
+	}
+	
+	public Ponto getPecaComida()
+	{
+		return comer;
 	}
 }

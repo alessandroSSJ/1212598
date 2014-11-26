@@ -31,6 +31,8 @@ public class Bispo implements Peca  {
 		this.lado = lado ;
 		
 		pt0 = new Ponto( x , y ) ;
+		
+		comida = null;
 	}
 
 	public Bispo( char lado , Ponto atual )
@@ -38,14 +40,15 @@ public class Bispo implements Peca  {
 		this.lado = lado ;
 		
 		pt0 = atual ;
+		
+		comida = null;
 	}
 	
 	public boolean ChecaPosicionamento(int xFinal , int yFinal) throws AtacarPeca
 	{
 		boolean pode = ( pt0.AlinhadoIncl(new Ponto( xFinal , yFinal) ) && !PecaNoCaminho(xFinal , yFinal) );
-		comida = Tabuleiro.getPeca(yFinal , xFinal);
 		
-		if(pode && comida != null)
+		if(pode && Tabuleiro.getPeca(yFinal , xFinal) != null)
 			throw new AtacarPeca(xFinal , yFinal);
 		
 		return pode; 
@@ -60,15 +63,19 @@ public class Bispo implements Peca  {
 		}
 		catch(AtacarPeca e)
 		{
+			comida = Tabuleiro.getPeca(yFinal , xFinal);
 			return true;
 		}
 		
+		comida = Tabuleiro.getPeca(yFinal , xFinal);
 		return sePode;
 	}
 	
 	public boolean VefXeque() 
 	{
 		Ponto posRei;
+		Peca temp = comida;
+		
 		if ( lado == 'b' )
 		{
 			posRei = Tabuleiro.getReiPreto();
@@ -84,9 +91,11 @@ public class Bispo implements Peca  {
 		}
 		catch(AtacarPeca a)
 		{	
+			comida = temp;
 			return true;
 		}
 		
+		comida = temp;
 		return false;
 	}
 	

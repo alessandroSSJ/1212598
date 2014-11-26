@@ -36,17 +36,24 @@ public class Rei implements Peca {
 		this.lado = lado ;
 		
 		pt0 = new Ponto( x , y ) ;
+		
+		comida = null;
 	}
 	
 	public boolean ChecaPosicionamento(int xFinal , int yFinal) throws AtacarPeca
 	{
 		boolean pode = pt0.Vizinho(new Ponto( xFinal , yFinal) ) ;
+		Peca temp = comida;
 		
 		comida = Tabuleiro.getPeca(yFinal , xFinal);
 		
 		if(pode && comida != null)
+		{
+			comida = temp;
 			throw new AtacarPeca(xFinal , yFinal);
+		}
 		
+		comida = temp;
 		return pode; 
 		
 	}
@@ -84,8 +91,7 @@ public class Rei implements Peca {
 	public boolean VefXeque() 
 	{
 		Ponto posRei;
-		
-		boolean sePode = false ;
+		Peca temp = comida;
 		
 		if ( lado == 'b' )
 		{
@@ -98,14 +104,16 @@ public class Rei implements Peca {
 		
 		try
 		{
-			sePode = ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
+			ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
 		}
 		catch(AtacarPeca a)
 		{	
+			comida = temp;
 			return true;
 		}
 		
-		return sePode;
+		comida = temp;
+		return false;
 	}
 	
 	private boolean ChecaRoqueDireita()

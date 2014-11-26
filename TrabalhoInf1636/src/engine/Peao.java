@@ -24,7 +24,7 @@ public class Peao implements Peca {
 	private Ponto pt0;
 	
 	/** Ponto do espaço na qual peça comida está */
-	private Peca comida;
+	private Peca comida = null;
 	
 	/** Indica que o mesmo pulou duas casas */
 	private boolean pulou;
@@ -37,11 +37,14 @@ public class Peao implements Peca {
 		this.lado = lado ;
 		
 		pt0 = new Ponto(x,y) ;
+		
+		comida = null;
 	}
 	
 	public boolean ChecaPosicionamento(int xFinal , int yFinal) throws AtacarPeca
 	{
 		boolean pode;
+		Peca temp = comida ;
 		
 		try 
 		{
@@ -49,6 +52,8 @@ public class Peao implements Peca {
 		}
 		catch(AoPassar e)
 		{
+			comida = temp;
+			
 			if (lado == 'b')
 				throw new AtacarPeca(xFinal , yFinal-1);
 			else
@@ -56,11 +61,17 @@ public class Peao implements Peca {
 		}
 		catch(Promover e)
 		{
+			comida = temp;
 			return true;
 		}
 		
+		
 		if ( comida != null && pode )
-			throw new AtacarPeca(comida.getPonto());
+		{
+			Ponto aux = comida.getPonto();
+			comida = temp;
+			throw new AtacarPeca(aux);
+		}
 		
 		return pode;
 	}
@@ -74,8 +85,15 @@ public class Peao implements Peca {
 		if ( lado == 'b' )
 		{
 			/* Promoção */
+			
+			Peca p = Tabuleiro.getPeca(yFinal, xFinal) ;
+			
+			comida = p;
+			
 			if ( pt0.getY() == 6 && yFinal == 7 && distX == 0)
 				throw new Promover();
+			if ( p != null && pt0.getY() == 6 && yFinal == 7 && (distX == -1 || distX ==1) )
+				throw new Promover(p.getPonto());
 			
 			/* Ao passar */
 			if ( distY == -1 && pt0.getY() == 4 )
@@ -93,7 +111,7 @@ public class Peao implements Peca {
 			
 			/* Movimentos normais */
 			
-			Peca p = Tabuleiro.getPeca(yFinal, xFinal) ;
+			p = Tabuleiro.getPeca(yFinal, xFinal) ;
 			
 			comida = p;
 			
@@ -117,8 +135,15 @@ public class Peao implements Peca {
 		else
 		{
 			/* Promoção */
+			
+			Peca p = Tabuleiro.getPeca(yFinal, xFinal) ;
+			
+			comida = p;
+			
 			if ( pt0.getY() == 1 && yFinal == 0 && distX == 0)
 				throw new Promover();
+			if ( p != null && pt0.getY() == 1 && yFinal == 0 && (distX == -1 || distX ==1) )
+				throw new Promover(p.getPonto());
 			
 			
 			/* Ao passar */ 
@@ -137,7 +162,7 @@ public class Peao implements Peca {
 			
 			/* Movimentos normais */
 			
-			Peca p = Tabuleiro.getPeca(yFinal, xFinal) ;
+			p = Tabuleiro.getPeca(yFinal, xFinal) ;
 			
 			comida = p;
 			
@@ -184,6 +209,8 @@ public class Peao implements Peca {
 	public boolean VefXeque() 
 	{
 		Ponto posRei;
+		Peca temp = comida;
+		
 		if ( lado == 'b' )
 		{
 			posRei = Tabuleiro.getReiPreto();
@@ -199,9 +226,11 @@ public class Peao implements Peca {
 		}
 		catch(AtacarPeca a)
 		{	
+			comida = temp;
 			return true;
 		}
 		
+		comida = temp;
 		return false;
 	}
 	
