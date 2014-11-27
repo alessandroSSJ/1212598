@@ -13,6 +13,7 @@ package engine;
 
 
 import auxiliar.Ponto;
+import excecoes.AtacarPeca;
 
 public class Tabuleiro {
 	
@@ -90,7 +91,7 @@ public class Tabuleiro {
 		reiPreto = new Ponto(4 , LINHAS-1);
 	}
 	
-	/** Pega a única instancia do tabuleiro */
+	/** Pega a única instancia do tabuleiro  SINGLETON*/
 	public static Tabuleiro getTabuleiro()
 	{
 		if ( tab == null )
@@ -319,7 +320,7 @@ public class Tabuleiro {
 				indexX = -1;
 			else if ( z == 1 || z == 4 || z == 7)
 				indexX = 0 ;
-			else if ( z == 3 || z == 5 || z == 8 )
+			else if ( z == 2 || z == 5 || z == 8 )
 				indexX = 1;
 			
 			if ( z < 3 )
@@ -345,9 +346,9 @@ public class Tabuleiro {
 			if ( (redondeza != null && redondeza.getLado() == lado) || ( redondeza == null && !posInvalida ) )
 			{
 				if ( lado == 'p' )
-					Tabuleiro.setReiBranco(xOriginal + indexX , yOriginal + indexY );
+					Tabuleiro.setReiBranco(direcaoX , direcaoY );
 				else
-					Tabuleiro.setReiPreto(xOriginal + indexX , yOriginal + indexY );
+					Tabuleiro.setReiPreto(direcaoX , direcaoY );
 			
 				for ( j = 0 ; j < Tabuleiro.getLinhas() && !flag ; j++ )
 					for ( i = 0 ; i < Tabuleiro.getColunas() && !flag ; i++)
@@ -361,7 +362,7 @@ public class Tabuleiro {
 					}
 			}
 			else
-				numXequesRedondezas++; /* Soma para que, no fim, possa-se comparar este valor com 9 que é o número de vizinhos*/
+				numXequesRedondezas++; 
 		}
 		
 		
@@ -372,7 +373,7 @@ public class Tabuleiro {
 		
 		System.out.printf("NUMERO DE XEQUES NA REDONDEZA : %d\n" , numXequesRedondezas);
 		
-		if ( numXequesRedondezas < 9 ) /* Se existem menos de 9 */
+		if ( numXequesRedondezas < 9 ) /* Se existem menos de 8 */
 			return false;
 		
 		/* ***************************************************************************************** */
@@ -395,10 +396,7 @@ public class Tabuleiro {
 		xOriginal = posOriginal.getX();
 		yOriginal = posOriginal.getY();
 		
-		if ( lado == 'b' )
-			Tabuleiro.setReiBranco(pecasDeXeque[0].getPonto());
-		else
-			Tabuleiro.setReiPreto(pecasDeXeque[0].getPonto());
+		tab.ChangePeca(pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX() , posOriginal.getY(), posOriginal.getX());
 		
 		for ( j = 0 ; j < Tabuleiro.getLinhas() ; j++ )
 			for ( i = 0 ; i < Tabuleiro.getColunas() ; i++)
@@ -406,23 +404,15 @@ public class Tabuleiro {
 				Peca atual = pecas[j][i];
 				if ( atual != null && atual.getLado() != lado && atual.getTipo()!="rei" && atual.VefXeque())
 				{
-					if ( lado == 'b' )
-						Tabuleiro.setReiBranco(xOriginal , yOriginal );
-					else
-						Tabuleiro.setReiPreto(xOriginal , yOriginal );     /* Retorna rei para sua posição de origem */
-					
-				//	System.out.printf("Rei branco: (%d,%d)\nRei Preto: (%d,%d)\n" , Tabuleiro.getReiBranco().getX() , Tabuleiro.getReiBranco().getY() , Tabuleiro.getReiPreto().getX() , Tabuleiro.getReiPreto().getY() );
-					
+					tab.ChangePeca( posOriginal.getY(), posOriginal.getX() , pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX());    /* Retorna rei para sua posição de origem */				
 					return false ; /* pelo menos uma peça pode comer a única de xeque, não é mate */
 				}
 			}
-		
-		if ( lado == 'b' )
-			Tabuleiro.setReiBranco(xOriginal , yOriginal );
-		else
-			Tabuleiro.setReiPreto(xOriginal , yOriginal );     /* Retorna rei para sua posição de origem */
-		
-		//System.out.printf("Rei branco: (%d,%d)\nRei Preto: (%d,%d)\n" , Tabuleiro.getReiBranco().getX() , Tabuleiro.getReiBranco().getY() , Tabuleiro.getReiPreto().getX() , Tabuleiro.getReiPreto().getY() );
+			
+		 /* Retorna rei para sua posição de origem */
+		tab.ChangePeca( posOriginal.getY(), posOriginal.getX() , pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX());
+				
+	 	System.out.printf("Rei branco: (%d,%d)\nRei Preto: (%d,%d)\n" , Tabuleiro.getReiBranco().getX() , Tabuleiro.getReiBranco().getY() , Tabuleiro.getReiPreto().getX() , Tabuleiro.getReiPreto().getY() );
 		
 		System.out.printf("NINGUEM PODE COMER A PECA\n");
 	
@@ -439,11 +429,73 @@ public class Tabuleiro {
 		
 		/* Se chegar aqui, significa que ninguém pode comer a peça de xeque, porém ela não é um cavalo, ou seja, 
 		 * ainda pode acontecer de alguma peça poder se colocar na frente dela! */
-
+		
+		if (lado == 'b')
+			posOriginal = Tabuleiro.getReiPreto();
+		else
+			posOriginal = Tabuleiro.getReiBranco();
+		
+		for ( j = 0 ; j < Tabuleiro.getLinhas() ; j++ )
+			for ( i = 0 ; i < Tabuleiro.getColunas() ; i++)
+			{
+				Peca atual = pecas[j][i];
+				if ( atual != null && atual.getLado() != lado )
+				{	
+					if ( Chega(pecasDeXeque[0].getPonto(), posOriginal , atual ) )
+						return false;
+				}
+			}
 		
 	    return true;	
 			
 	}
+	
+	/** Função que checa se determinada peça intersecta a outra */
+	private static boolean Chega(Ponto pt0 , Ponto p , Peca atual)
+	{	
+		int xFinal = p.getX();
+		int yFinal = p.getY();
+		
+		int deltaY = yFinal - pt0.getY();
+		int rY = Direcao(deltaY);
+		
+		int deltaX = xFinal - pt0.getX();
+		int rX = Direcao(deltaX);
+		
+		int xTeste = pt0.getX() + rX ;
+		int yTeste = pt0.getY() + rY ;
+		
+		while( !(xTeste == xFinal && yTeste == yFinal) )
+		{
+
+			try
+			{
+			if ( atual.ChecaPosicionamento(xFinal, yFinal) )
+				return true;
+			}
+			catch(AtacarPeca a)
+			{
+				return true;
+			}
+			
+			xTeste += rX;
+			yTeste += rY;
+		}
+		
+		return false;
+	}
+	
+	private static int Direcao(int delta)
+	{
+		if ( delta == 0 )
+			return 0;
+		
+		if ( delta < 0 )
+			return -1;
+		else
+			return 1;	
+	}
+	
 	
 	/** Le a variável de xeque do rei branco */
 	public static boolean getXequeReiBranco()

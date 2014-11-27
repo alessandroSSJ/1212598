@@ -89,6 +89,7 @@ public class Torre implements Peca {
 	{
 		Ponto posRei;
 		Peca temp = comida;
+		boolean sePode = false;
 		
 		if ( lado == 'b' )
 		{
@@ -101,7 +102,7 @@ public class Torre implements Peca {
 		
 		try
 		{
-			ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
+			sePode = ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
 		}
 		catch(AtacarPeca a)
 		{	
@@ -110,7 +111,7 @@ public class Torre implements Peca {
 		}
 		
 		comida = temp;
-		return false;
+		return sePode;
 	}
 	
 	private boolean PecaNoCaminho(int xFinal, int yFinal)

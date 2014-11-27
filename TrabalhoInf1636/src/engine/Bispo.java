@@ -75,6 +75,7 @@ public class Bispo implements Peca  {
 	{
 		Ponto posRei;
 		Peca temp = comida;
+		boolean sePode = false;
 		
 		if ( lado == 'b' )
 		{
@@ -87,7 +88,7 @@ public class Bispo implements Peca  {
 		
 		try
 		{
-			ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
+			sePode = ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
 		}
 		catch(AtacarPeca a)
 		{	
@@ -96,7 +97,7 @@ public class Bispo implements Peca  {
 		}
 		
 		comida = temp;
-		return false;
+		return sePode;
 	}
 	
 	public void setPonto(int x, int y)
@@ -140,7 +141,8 @@ public class Bispo implements Peca  {
 		
 		teste = Tabuleiro.getPeca(yTeste , xTeste ) ;
 		
-		while( xTeste != xFinal && yTeste != yFinal )
+		//while( xTeste != xFinal && yTeste != yFinal )
+		while( !(xTeste == xFinal && yTeste == yFinal) )
 		{
 			if ( teste != null )
 				return true;
@@ -154,6 +156,9 @@ public class Bispo implements Peca  {
 	}
 	private int Direcao(int delta)
 	{
+		if ( delta == 0 )
+			return 0;
+		
 		if ( delta < 0 )
 			return -1;
 		else

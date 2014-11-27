@@ -210,6 +210,7 @@ public class Peao implements Peca {
 	{
 		Ponto posRei;
 		Peca temp = comida;
+		boolean sePode = false;
 		
 		if ( lado == 'b' )
 		{
@@ -222,7 +223,7 @@ public class Peao implements Peca {
 		
 		try
 		{
-			ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
+			sePode = ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
 		}
 		catch(AtacarPeca a)
 		{	
@@ -231,7 +232,7 @@ public class Peao implements Peca {
 		}
 		
 		comida = temp;
-		return false;
+		return sePode;
 	}
 	
 	private boolean PecaNoCaminho()

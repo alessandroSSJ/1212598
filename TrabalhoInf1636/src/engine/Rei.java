@@ -92,6 +92,7 @@ public class Rei implements Peca {
 	{
 		Ponto posRei;
 		Peca temp = comida;
+		boolean sePode = false;
 		
 		if ( lado == 'b' )
 		{
@@ -104,7 +105,7 @@ public class Rei implements Peca {
 		
 		try
 		{
-			ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
+			sePode = ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
 		}
 		catch(AtacarPeca a)
 		{	
@@ -113,7 +114,7 @@ public class Rei implements Peca {
 		}
 		
 		comida = temp;
-		return false;
+		return sePode;
 	}
 	
 	private boolean ChecaRoqueDireita()
@@ -122,6 +123,31 @@ public class Rei implements Peca {
 		Peca p1    = Tabuleiro.getPeca(pt0.getY() , pt0.getX() + 1 ) ;
 		Peca p2    = Tabuleiro.getPeca(pt0.getY() , pt0.getX() + 2 ) ;
 		Peca Torre = Tabuleiro.getPeca(pt0.getY() , pt0.getX() + 3 ) ;
+		
+		if (lado == 'b' && Tabuleiro.ChecaXequeReiBranco() )
+			return false;
+		if (lado == 'p' && Tabuleiro.ChecaXequeReiPreto() )
+			return false;
+			
+		if (lado == 'b')
+		{
+			Tabuleiro.setReiBranco(pt0.getX() - 1  , pt0.getY());
+			if(Tabuleiro.ChecaXequeReiBranco())
+			{
+				Tabuleiro.setReiBranco(pt0);
+				return false;
+			}
+		}
+		else
+		{
+			Tabuleiro.setReiPreto(pt0.getX() - 1  , pt0.getY());
+			if(Tabuleiro.ChecaXequeReiPreto())
+			{
+				Tabuleiro.setReiPreto(pt0);
+				return false;
+			}
+		}
+		
 		
 		return (p1 == null) && (p2 == null) && ( !Torre.getSpecial() ) ;
 	}
@@ -133,6 +159,49 @@ public class Rei implements Peca {
 		Peca p2    = Tabuleiro.getPeca(pt0.getY() , pt0.getX() - 2 ) ;
 		Peca p3    = Tabuleiro.getPeca(pt0.getY() , pt0.getX() - 3 ) ;
 		Peca Torre = Tabuleiro.getPeca(pt0.getY() , pt0.getX() - 4 ) ;
+		
+		if (lado == 'b' && Tabuleiro.ChecaXequeReiBranco() )
+			return false;
+		if (lado == 'p' && Tabuleiro.ChecaXequeReiPreto() )
+			return false;
+		
+		if (lado == 'b')
+		{
+			Tabuleiro.setReiBranco(pt0.getX() - 1  , pt0.getY());
+			if(Tabuleiro.ChecaXequeReiBranco())
+			{
+				Tabuleiro.setReiBranco(pt0);
+				return false;
+			}
+		}
+		else
+		{
+			Tabuleiro.setReiPreto(pt0.getX() - 1  , pt0.getY());
+			if(Tabuleiro.ChecaXequeReiPreto())
+			{
+				Tabuleiro.setReiPreto(pt0);
+				return false;
+			}
+		}
+		
+		if (lado == 'b')
+		{
+			Tabuleiro.setReiBranco(pt0.getX() - 2  , pt0.getY());
+			if(Tabuleiro.ChecaXequeReiBranco())
+			{
+				Tabuleiro.setReiBranco(pt0);
+				return false;
+			}
+		}
+		else
+		{
+			Tabuleiro.setReiPreto(pt0.getX() - 2  , pt0.getY());
+			if(Tabuleiro.ChecaXequeReiPreto())
+			{
+				Tabuleiro.setReiPreto(pt0);
+				return false;
+			}
+		}
 		
 		return (p1 == null) && (p2 == null) && (p3 == null) && ( !Torre.getSpecial() ) ;
 	}

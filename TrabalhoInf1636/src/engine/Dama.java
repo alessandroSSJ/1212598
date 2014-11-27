@@ -47,7 +47,7 @@ public class Dama implements Peca {
 	public boolean ChecaPosicionamento(int xFinal , int yFinal) throws AtacarPeca
 	{	
 		Ponto pFinal = new Ponto( xFinal , yFinal ) ;
-		
+				
 		boolean pode = ( ( pt0.AlinhadoVH( pFinal ) || pt0.AlinhadoIncl(pFinal) ) && !PecaNoCaminho(xFinal , yFinal) )  ;
 		
 		if(pode && Tabuleiro.getPeca(yFinal , xFinal) != null)
@@ -77,6 +77,7 @@ public class Dama implements Peca {
 	{
 		Ponto posRei;
 		Peca temp = comida;
+		boolean sePode = false;
 		
 		if ( lado == 'b' )
 		{
@@ -86,10 +87,10 @@ public class Dama implements Peca {
 		{
 			posRei = Tabuleiro.getReiBranco();
 		}
-		
+				
 		try
 		{
-			ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
+			sePode = ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
 		}
 		catch(AtacarPeca a)
 		{	
@@ -98,7 +99,7 @@ public class Dama implements Peca {
 		}
 		
 		comida = temp;
-		return false;
+		return sePode;
 	}
 	
 	private boolean PecaNoCaminho(int xFinal, int yFinal)

@@ -150,8 +150,10 @@ public class TabThread extends Thread{
 			tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 			
 			while( p.getPromovida() == null ) System.out.printf("Aguardando escolha\n") ;
-			
+						
 			tab.CriaPeca(ptDest, p.getPromovida());
+			
+			p.getPromovida().setPonto(ptDest.getX() , ptDest.getY());
 			
 			clipMov.loop(1);
 			
@@ -192,20 +194,16 @@ public class TabThread extends Thread{
 		
 	 	if( Tabuleiro.getVez() == 'b'){
 			if (Tabuleiro.ChecaXequeReiPreto() )
-	 			System.out.printf("XEQUE REI PRETO\n");}
+	 			System.out.printf("XEQUE REI PRETO\n");} 
 		else
 			if (Tabuleiro.ChecaXequeReiBranco())
 				System.out.printf("XEQUE REI BRANCO\n");
 	 	
   /* ************************************************************************************************** */
 	 	
-	 	if (Tabuleiro.getXequeReiBranco())
-	 		System.out.printf("CHEQUE REI BRANCO\n");
-	 	if (Tabuleiro.getXequeReiPreto())
-	 		System.out.printf("CHEQUE REI PRETO\n");
 	 	
   /* ******************************* Checa se ocorreu xeque mate **************************************** */ 	
-		/*
+		
 		if ( Tabuleiro.getVez() == 'b' && Tabuleiro.getXequeReiPreto() && Tabuleiro.ChecaXequeMateReiPreto() )
 		{
 			System.out.printf("\n\nXEQUE MATE\nBRANCO WINS\n");
@@ -213,17 +211,17 @@ public class TabThread extends Thread{
 		else if ( Tabuleiro.getVez() == 'p' && Tabuleiro.getXequeReiBranco() && Tabuleiro.ChecaXequeMateReiBranco() )
 		{
 			System.out.printf("XEQUE MATE\n PRETO WINS\n");
-		}*/
+		}
 		
   /* ************************************************************************************************************** */		
-	 	
-	System.out.printf("AS REAIS : \nRei branco: (%d,%d)\nRei Preto: (%d,%d)\n" , Tabuleiro.getReiBranco().getX() , Tabuleiro.getReiBranco().getY() , Tabuleiro.getReiPreto().getX() , Tabuleiro.getReiPreto().getY() );
+		//System.out.printf("AS REAIS : \nRei branco: (%d,%d)\nRei Preto: (%d,%d)\n" , Tabuleiro.getReiBranco().getX() , Tabuleiro.getReiBranco().getY() , Tabuleiro.getReiPreto().getX() , Tabuleiro.getReiPreto().getY() );
 		
 		/* Vira a rodada */
-		
+
 		Tabuleiro.ViraVez();
 		Tabuleiro.ComputaRodada();
 		System.out.printf("FIM DA RODADA ************************************************\n");
+		
 		/* *********************************************** */
 	}
 	

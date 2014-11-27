@@ -47,7 +47,7 @@ public class Cavalo implements Peca {
 	public boolean ChecaPosicionamento(int xFinal , int yFinal) throws AtacarPeca
 	{
 		boolean pode = pt0.AlinhadoL(new Ponto( xFinal , yFinal) ) ;		
-		
+				
 		if(pode && Tabuleiro.getPeca(yFinal,xFinal) != null)
 		{
 			throw new AtacarPeca(xFinal , yFinal);
@@ -78,6 +78,7 @@ public class Cavalo implements Peca {
 	{
 		Ponto posRei;
 		Peca temp = comida;
+		boolean sePode = false;
 		
 		if ( lado == 'b' )
 		{
@@ -90,7 +91,7 @@ public class Cavalo implements Peca {
 		
 		try
 		{
-			ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
+			sePode = ChecaPosicionamento(posRei.getX() , posRei.getY() ) ;
 		}
 		catch(AtacarPeca a)
 		{	
@@ -99,7 +100,7 @@ public class Cavalo implements Peca {
 		}
 		
 		comida = temp;
-		return false;
+		return sePode;
 	}
 	
 	public void setPonto(int x, int y)
