@@ -143,32 +143,33 @@ public class Rei implements Peca {
 			return false;
 		}
 		
+		Tabuleiro.ChangePeca(pOriginal.getY(), pOriginal.getX(), pt0.getY(), pt0.getX()+1);
+		
 		if (lado == 'b')
 		{
-			Tabuleiro.setReiBranco(pt0.getX() + 1  , pt0.getY());
+			
 			if(Tabuleiro.ChecaXequeReiBranco())
 			{
 				Tabuleiro.XequeReiBranco(reiState);
-				Tabuleiro.setReiBranco(pOriginal);
+				Tabuleiro.ChangePeca(pt0.getY() , pt0.getX() , pOriginal.getY(), pOriginal.getX());
 				return false;
 			}
 
 			Tabuleiro.XequeReiBranco(reiState);
-			Tabuleiro.setReiBranco(pOriginal);
 		}
 		else
 		{
-			Tabuleiro.setReiPreto(pt0.getX() + 1  , pt0.getY());
 			if(Tabuleiro.ChecaXequeReiPreto())
 			{
 				Tabuleiro.XequeReiPreto(reiState);
-				Tabuleiro.setReiPreto(pOriginal);
+				Tabuleiro.ChangePeca(pt0.getY() , pt0.getX() , pOriginal.getY(), pOriginal.getX());
 				return false;
 			}
 
 			Tabuleiro.XequeReiPreto(reiState);
-			Tabuleiro.setReiPreto(pOriginal);
 		}
+		
+		Tabuleiro.ChangePeca(pt0.getY() , pt0.getX() , pOriginal.getY(), pOriginal.getX());
 		
 		
 		return (p1 == null) && (p2 == null) && ( !Torre.getSpecial() ) ;
@@ -201,32 +202,33 @@ public class Rei implements Peca {
 			return false;
 		}
 		
+		Tabuleiro.ChangePeca(pOriginal.getY(), pOriginal.getX(), pt0.getY(), pt0.getX()-1);
+		
 		if (lado == 'b')
 		{
-			Tabuleiro.setReiBranco(pt0.getX() - 1  , pt0.getY());
+			
 			if(Tabuleiro.ChecaXequeReiBranco())
 			{
 				Tabuleiro.XequeReiBranco(reiState);
-				Tabuleiro.setReiBranco(pOriginal);
+				Tabuleiro.ChangePeca(pt0.getY() , pt0.getX() , pOriginal.getY(), pOriginal.getX());
 				return false;
 			}
 
 			Tabuleiro.XequeReiBranco(reiState);
-			Tabuleiro.setReiBranco(pOriginal);
 		}
 		else
 		{
-			Tabuleiro.setReiPreto(pt0.getX() - 1  , pt0.getY());
 			if(Tabuleiro.ChecaXequeReiPreto())
 			{
 				Tabuleiro.XequeReiPreto(reiState);
-				Tabuleiro.setReiPreto(pOriginal);
+				Tabuleiro.ChangePeca(pt0.getY() , pt0.getX() , pOriginal.getY(), pOriginal.getX());
 				return false;
 			}
 
 			Tabuleiro.XequeReiPreto(reiState);
-			Tabuleiro.setReiPreto(pOriginal);
 		}
+		
+		Tabuleiro.ChangePeca(pt0.getY() , pt0.getX() , pOriginal.getY(), pOriginal.getX());
 				
 		return (p1 == null) && (p2 == null) && (p3 == null) && ( !Torre.getSpecial() ) ;
 	}

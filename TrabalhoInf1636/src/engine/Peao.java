@@ -228,7 +228,7 @@ public class Peao implements Peca {
 			comida = temp;
 			return true;
 		}
-
+		
 		comida = temp;
 		return sePode;
 	}

@@ -114,7 +114,7 @@ public class Tabuleiro {
 	}
 	
 	/** Muda a posição de duas peças */
-	public void ChangePeca(int linhaO, int colunaO, int linhaD, int colunaD)
+	public static void ChangePeca(int linhaO, int colunaO, int linhaD, int colunaD)
 	{
 		Peca temp = pecas[linhaD][colunaD];
 		Peca orig = pecas[linhaO][colunaO];
