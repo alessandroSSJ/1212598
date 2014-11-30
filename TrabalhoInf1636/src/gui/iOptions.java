@@ -42,6 +42,8 @@ public class iOptions extends JLayeredPane {
 		
 		
 		this.add(sair);
+		this.add(salvarJogo);
+		this.add(menuInicial);
 		
 	}
 	
