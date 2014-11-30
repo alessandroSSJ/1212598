@@ -30,7 +30,7 @@ public class iFundo extends JLayeredPane {
 	private static final int HEIGHT = 80  ;
 	private static final int WIDTH = 80   ;
 	
-	/** Overriding na classe paintComponent */
+	/** Overriding no metodo paintComponent */
 	@Override public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g) ;

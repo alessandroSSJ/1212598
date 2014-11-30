@@ -40,6 +40,12 @@ public class TabThread extends Thread{
 	private static File mov = new File("Sons/mov.wav");
 	private static Clip clipMov;
 	
+	private static File movMate = new File("Sons/xequemate.wav");
+	private static Clip clipMate;
+	
+	private static File movError = new File("Sons/error.wav");
+	private static Clip clipError;
+	
 	public TabThread()
 	{
 		super("Thread do tabuleiro");
@@ -57,6 +63,20 @@ public class TabThread extends Thread{
 		    info = new DataLine.Info(Clip.class, format);
 		    clipMov = (Clip) AudioSystem.getLine(info);
 		    clipMov.open(stream);
+		    
+		    /** Som de xeque mate */
+		    stream = AudioSystem.getAudioInputStream(movMate);
+		    format = stream.getFormat();
+		    info = new DataLine.Info(Clip.class, format);
+		    clipMate = (Clip) AudioSystem.getLine(info);
+		    clipMate.open(stream);
+		    
+		    /** Som de movimentação inválida */
+		    stream = AudioSystem.getAudioInputStream(movError);
+		    format = stream.getFormat();
+		    info = new DataLine.Info(Clip.class, format);
+		    clipError = (Clip) AudioSystem.getLine(info);
+		    clipError.open(stream);
 	    }
 	    catch(Exception e)
 	    {
@@ -162,7 +182,7 @@ public class TabThread extends Thread{
 		}
 		catch(MovimentoInvalido e)
 		{
-			System.out.println(e.getMessage());	
+			clipError.loop(1);
 			return;
 		}
 		catch(PecaOrigemNull e)
@@ -176,6 +196,7 @@ public class TabThread extends Thread{
 		catch(ReiEmXeque e)
 		{
 			System.out.println(e.getMessage());
+			clipError.loop(1);
 			return;
 		}
 		catch(Exception e)
@@ -207,20 +228,20 @@ public class TabThread extends Thread{
 		if ( Tabuleiro.getVez() == 'b' && Tabuleiro.getXequeReiPreto() && Tabuleiro.ChecaXequeMateReiPreto() )
 		{
 			System.out.printf("\n\nXEQUE MATE\nBRANCO WINS\n");
+			clipMate.loop(0);
 		}
 		else if ( Tabuleiro.getVez() == 'p' && Tabuleiro.getXequeReiBranco() && Tabuleiro.ChecaXequeMateReiBranco() )
 		{
 			System.out.printf("XEQUE MATE\n PRETO WINS\n");
+			clipMate.loop(0);
 		}
 		
   /* ************************************************************************************************************** */		
-		//System.out.printf("AS REAIS : \nRei branco: (%d,%d)\nRei Preto: (%d,%d)\n" , Tabuleiro.getReiBranco().getX() , Tabuleiro.getReiBranco().getY() , Tabuleiro.getReiPreto().getX() , Tabuleiro.getReiPreto().getY() );
-		
+				
 		/* Vira a rodada */
 
 		Tabuleiro.ViraVez();
 		Tabuleiro.ComputaRodada();
-		System.out.printf("FIM DA RODADA ************************************************\n");
 		
 		/* *********************************************** */
 	}
@@ -247,7 +268,7 @@ public class TabThread extends Thread{
 			{
 				tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
 				tab.CriaPeca(ptDest , temp);
-				
+				Tabuleiro.XequeReiBranco(false);
 				return true;
 			}
 			
@@ -269,7 +290,7 @@ public class TabThread extends Thread{
 			{
 				tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
 				tab.CriaPeca(ptDest , temp);
-				
+				Tabuleiro.XequeReiPreto(false);
 				return true;
 			}
 			

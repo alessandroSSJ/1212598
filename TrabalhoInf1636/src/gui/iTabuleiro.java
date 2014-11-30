@@ -23,8 +23,8 @@ public class iTabuleiro extends JFrame implements MouseListener {
 	private static final long serialVersionUID = 1L;
 	
 	/** Dimensões reais de um tabuleiro de xadrez */
-	private static final int HEIGHT =  8 * iFundo.getAltura()  ;
-	private static final int WIDTH =   8 * iFundo.getLargura() ;
+	private static final int HEIGHT =  8 * iFundo.getAltura();
+	private static final int WIDTH =   8 * iFundo.getLargura();
 	
 	/** Pontos clicados pelo mouse para movimentar peças */
 	private static Ponto ptOrig = null ;
@@ -59,7 +59,7 @@ public class iTabuleiro extends JFrame implements MouseListener {
 	{
 		iFundo f = new iFundo() ;
 		this.setVisible(true) ;
-		this.add(f) ;
+		this.add(f);
 	}
 	
 	/** Desenha o LayeredPane das peças */
@@ -68,6 +68,16 @@ public class iTabuleiro extends JFrame implements MouseListener {
 		iPeca p = new iPeca(tab) ;
 		this.setVisible(true);
 		this.add(p) ;
+	}
+	
+	/** Desenha o menu de opções */
+	public void MenuOpcoes()
+	{
+		iOptions p = new iOptions();
+		this.add(p);
+		setContentPane(p);
+        setLocationByPlatform(true);
+        setVisible(true);
 	}
 	
 	/** Retorna a largura do tabuleiro */
@@ -121,7 +131,7 @@ public class iTabuleiro extends JFrame implements MouseListener {
 		int xi = e.getX() / iFundo.getLargura() ;
 		int yi = (8*iFundo.getAltura() - e.getY() ) / iFundo.getAltura()  ;
 		
-		if( ptOrig == null && ptDest == null )
+		if( ptOrig == null && ptDest == null && xi >= 0 && xi <= 7 && yi >= 0 && yi <= 7 )
 		{
 			ptOrig = new Ponto(xi , yi ) ;
 			try
@@ -142,7 +152,7 @@ public class iTabuleiro extends JFrame implements MouseListener {
 				System.exit(1);
 			}
 		}
-		else if( ptOrig != null && ptDest == null)
+		else if( ptOrig != null && ptDest == null && xi >= 0 && xi <= 7 && yi >= 0 && yi <= 7 )
 		{
 		    ptDest = new Ponto(xi , yi ) ;
 		    
@@ -153,6 +163,12 @@ public class iTabuleiro extends JFrame implements MouseListener {
 		    catch(PropriaPeca e1)
 		    {
 		    	ptOrig = ptDest;
+		    	ptDest = null;
+		    	return;
+		    }
+		    catch(MesmaPeca e2)
+		    {
+		    	ptOrig = null;
 		    	ptDest = null;
 		    	return;
 		    }
@@ -202,10 +218,12 @@ public class iTabuleiro extends JFrame implements MouseListener {
     }
     
     /** Trata o ponto do segundo click */
-    private void ChecaDestino(Ponto p) throws PropriaPeca
+    private void ChecaDestino(Ponto p) throws PropriaPeca , MesmaPeca
     {
     	Peca dest = Tabuleiro.getPeca(p) ;
     	    	
+    	if ( p.getX() == ptOrig.getX() && p.getY() == ptOrig.getY())
+			throw new MesmaPeca();
 		if ( (dest != null) && (dest.getLado() == Tabuleiro.getVez()) )
 			throw new PropriaPeca();
     }
