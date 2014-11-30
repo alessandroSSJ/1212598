@@ -162,7 +162,7 @@ public class Tabuleiro {
 	
 	/** Retira uma peca do tabuleiro*/
 	public void ComePeca(Ponto p)
-	{
+	{		
 		pecas[p.getY()][p.getX()] = null;
 	}
 	

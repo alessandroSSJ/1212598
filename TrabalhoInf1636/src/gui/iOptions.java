@@ -14,12 +14,15 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 
-import javax.swing.Box;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
@@ -29,38 +32,57 @@ public class iOptions extends JLayeredPane {
 	
 	/** Dimensões da interface */
 	private static final int HEIGHT = 50  ;
-	private static final int WIDTH = 140   ;
+	private static final int WIDTH = 250   ;
 	
 	/**  Botões retornar menu inicial, salvar jogo e sair */
 	private JButton menuInicial ;
 	private JButton salvarJogo ;
 	private JButton sair;
 	
-	/** Overriding na classe paintComponent */
-	public void paintComponent(Graphics g)
+	/** JPanels */
+	JPanel buttons;
+	iPecasComida pecasComida;
+	JLabel mess ;
+	
+	public iOptions()
 	{
-		super.paintComponent(g);
+		super();
+	
 		setLayout(new BorderLayout());
-		
-		JPanel buttons = new JPanel();
+		setBorder(BorderFactory.createLineBorder(Color.black));
+		buttons = new JPanel();
 		buttons.setLayout(new GridLayout(5,0));
 		
 		menuInicial = new JButton("Retornar ao menu inicial");
+		menuInicial.setBackground(Color.GREEN);
+		
 		salvarJogo = new JButton("Salvar o jogo");
+		salvarJogo.setBackground(Color.green);
+		
 		sair = new JButton("Sair do jogo");
+		sair.setBackground(Color.green);
 		
 		menuInicial.setPreferredSize(new Dimension(WIDTH,HEIGHT));
 		salvarJogo.setPreferredSize(new Dimension(WIDTH,HEIGHT));
 		sair.setPreferredSize(new Dimension(WIDTH,HEIGHT));
 		
+		mess = new JLabel("        Pecas perdidas");
+		mess.setFont(new Font("Papyrus", Font.ITALIC, 20));
+		
+		pecasComida = new iPecasComida();
+		
+	}
+	
+	/** Overriding na classe paintComponent */
+	public void adiciona()
+	{	
 		buttons.add(menuInicial);
-		buttons.add( Box.createVerticalStrut(5) );
 		buttons.add(salvarJogo);
-		buttons.add( Box.createVerticalStrut(60) );
 		buttons.add(sair);
 		
 		this.add("North",buttons);
-		//this.add("South",pecasComidas);
+		this.add("South",mess);
+		this.add(pecasComida);
 		
 	}
 	
@@ -68,6 +90,7 @@ public class iOptions extends JLayeredPane {
 	{
 		return WIDTH;
 	}
+	
 	
 }
 	

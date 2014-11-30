@@ -29,6 +29,7 @@ import excecoes.PropriaPeca;
 import excecoes.ReiEmXeque;
 import excecoes.RoqueDireita;
 import excecoes.RoqueEsquerda;
+import gui.iPecasComida;
 import gui.iPromotion;
 import gui.iTabuleiro;
 
@@ -129,7 +130,11 @@ public class TabThread extends Thread{
 				}
 				
 				if ( pecaOrigem.pecaComida() != null )
-					tab.ComePeca(pecaOrigem.pecaComida().getPonto());
+				{
+					Peca temp = pecaOrigem.pecaComida();
+					tab.ComePeca(temp.getPonto());
+					iPecasComida.sendPeca("Pecas/" + temp.getLado() + "_" + temp.getTipo() + ".gif" , temp.getLado());
+				}
 				else
 					System.out.printf("Algum erro estranho\n");
 				
@@ -140,8 +145,11 @@ public class TabThread extends Thread{
 		}
 		catch(AoPassar e)
 		{
+			Peca temp = pecaOrigem.pecaComida();
+			
 			tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 			tab.ComePeca(pecaOrigem.pecaComida().getPonto());
+			
 			clipMov.loop(1);
 		}
 		catch(RoqueDireita e)
@@ -208,6 +216,8 @@ public class TabThread extends Thread{
 			iTabuleiro.ZerarRodada();
 		}	
 		
+		System.out.printf("CHECA**********************************RODADA********************\n");
+
   /* ********************* Checa se o outro rei foi deixado em xeque! ********************************* */
 		
 	 	if( Tabuleiro.getVez() == 'b'){
@@ -239,7 +249,7 @@ public class TabThread extends Thread{
 
 		Tabuleiro.ViraVez();
 		Tabuleiro.ComputaRodada();
-		
+		System.out.printf("**********************************RODADA********************\n");
 		/* *********************************************** */
 	}
 	
@@ -255,6 +265,7 @@ public class TabThread extends Thread{
 		if(Tabuleiro.getVez() == 'b' )
 		{
 			Peca temp = pecaDestino;
+			boolean reiState = Tabuleiro.getXequeReiBranco();
 			
 			if ( temp != null )
 				tab.ComePeca(temp.getPonto());
@@ -265,7 +276,7 @@ public class TabThread extends Thread{
 			{
 				tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
 				tab.CriaPeca(ptDest , temp);
-				Tabuleiro.XequeReiBranco(false);
+				Tabuleiro.XequeReiBranco(reiState);
 				return true;
 			}
 			
@@ -277,6 +288,7 @@ public class TabThread extends Thread{
 		else
 		{
 			Peca temp = pecaDestino;
+			boolean reiState = Tabuleiro.getXequeReiPreto();
 			
 			if ( temp != null )
 				tab.ComePeca(temp.getPonto());
@@ -287,7 +299,7 @@ public class TabThread extends Thread{
 			{
 				tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
 				tab.CriaPeca(ptDest , temp);
-				Tabuleiro.XequeReiPreto(false);
+				Tabuleiro.XequeReiPreto(reiState);
 				return true;
 			}
 			

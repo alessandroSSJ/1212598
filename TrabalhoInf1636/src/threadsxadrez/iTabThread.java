@@ -19,7 +19,7 @@ public class iTabThread extends Thread {
 	{
 		super("Thread da interface do tabuleiro");
 		iTab = new iTabuleiro();
-		//iTab.MenuOpcoes();
+	//	iTab.MenuOpcoes();
 		iTab.DrawPecas(TabThread.getTabuleiro());
 		iTab.DrawBackground();	
 	}
