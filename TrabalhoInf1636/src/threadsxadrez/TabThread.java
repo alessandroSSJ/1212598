@@ -119,7 +119,7 @@ public class TabThread extends Thread{
 			
 			if ( pecaDestino == null )
 			{
-				tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
+				Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 				clipMov.loop(1);
 			}
 			else 
@@ -138,30 +138,28 @@ public class TabThread extends Thread{
 				else
 					System.out.printf("Algum erro estranho\n");
 				
-				tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
+				Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 				clipMov.loop(1);
 		    }
 			
 		}
 		catch(AoPassar e)
-		{
-			Peca temp = pecaOrigem.pecaComida();
-			
-			tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
+		{			
+			Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 			tab.ComePeca(pecaOrigem.pecaComida().getPonto());
 			
 			clipMov.loop(1);
 		}
 		catch(RoqueDireita e)
 		{
-			tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptOrig.getY() , ptOrig.getX() + 2 ) ;
-			tab.ChangePeca(e.getY() , e.getX() , e.getY() , e.getX() - 2 ) ;
+			Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptOrig.getY() , ptOrig.getX() + 2 ) ;
+			Tabuleiro.ChangePeca(e.getY() , e.getX() , e.getY() , e.getX() - 2 ) ;
 			clipMov.loop(1);
 		} 
 		catch(RoqueEsquerda e)
 		{
-			tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptOrig.getY() , ptOrig.getX() - 2 ) ;
-			tab.ChangePeca(e.getY() , e.getX() , e.getY() , e.getX() + 3 ) ;
+			Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptOrig.getY() , ptOrig.getX() - 2 ) ;
+			Tabuleiro.ChangePeca(e.getY() , e.getX() , e.getY() , e.getX() + 3 ) ;
 			clipMov.loop(1);
 		}
 		catch(Promover e)
@@ -172,7 +170,7 @@ public class TabThread extends Thread{
 			if(e.getPecaComida() != null)
 				tab.ComePeca(e.getPecaComida());
 			
-			tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
+			Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 			
 			while( p.getPromovida() == null ) System.out.printf("Aguardando escolha\n") ;
 						
@@ -216,8 +214,6 @@ public class TabThread extends Thread{
 			iTabuleiro.ZerarRodada();
 		}	
 		
-		System.out.printf("CHECA**********************************RODADA********************\n");
-
   /* ********************* Checa se o outro rei foi deixado em xeque! ********************************* */
 		
 	 	if( Tabuleiro.getVez() == 'b'){
@@ -234,12 +230,12 @@ public class TabThread extends Thread{
 		
 		if ( Tabuleiro.getVez() == 'b' && Tabuleiro.getXequeReiPreto() && Tabuleiro.ChecaXequeMateReiPreto() )
 		{
-			System.out.printf("\n\nXEQUE MATE\nBRANCO WINS\n");
+			System.out.printf("XEQUE MATE\nPEÇAS BRANCAS GANHARAM!\n");
 			clipMate.loop(0);
 		}
 		else if ( Tabuleiro.getVez() == 'p' && Tabuleiro.getXequeReiBranco() && Tabuleiro.ChecaXequeMateReiBranco() )
 		{
-			System.out.printf("XEQUE MATE\n PRETO WINS\n");
+			System.out.printf("XEQUE MATE\nPEÇAS PRETAS GANHARAM\n");
 			clipMate.loop(0);
 		}
 		
@@ -249,7 +245,6 @@ public class TabThread extends Thread{
 
 		Tabuleiro.ViraVez();
 		Tabuleiro.ComputaRodada();
-		System.out.printf("**********************************RODADA********************\n");
 		/* *********************************************** */
 	}
 	
@@ -270,17 +265,17 @@ public class TabThread extends Thread{
 			if ( temp != null )
 				tab.ComePeca(temp.getPonto());
 			
-			tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
+			Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 			
 			if ( Tabuleiro.ChecaXequeReiBranco() ) 
 			{
-				tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
+				Tabuleiro.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
 				tab.CriaPeca(ptDest , temp);
 				Tabuleiro.XequeReiBranco(reiState);
 				return true;
 			}
 			
-			tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
+			Tabuleiro.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
 			tab.CriaPeca(ptDest , temp);
 			
 			return false;
@@ -293,17 +288,17 @@ public class TabThread extends Thread{
 			if ( temp != null )
 				tab.ComePeca(temp.getPonto());
 			
-			tab.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
+			Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 			
 			if ( Tabuleiro.ChecaXequeReiPreto() )
 			{
-				tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
+				Tabuleiro.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
 				tab.CriaPeca(ptDest , temp);
 				Tabuleiro.XequeReiPreto(reiState);
 				return true;
 			}
 			
-			tab.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
+			Tabuleiro.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
 			
 			tab.CriaPeca(ptDest , temp);
 			

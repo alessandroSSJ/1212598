@@ -371,8 +371,6 @@ public class Tabuleiro {
 				numXequesRedondezas++;
 		}
 		
-		System.out.printf("NUMERO DE XEQUES NA REDONDEZA : %d\n" , numXequesRedondezas);
-		
 		if ( numXequesRedondezas < 9 ) /* Se existem menos de 8 */
 			return false;
 		
