@@ -108,9 +108,6 @@ public class TabThread extends Thread{
 			if( pecaOrigem == null)
 				throw new PecaOrigemNull();
 			
-			/*if (  pecaOrigem.ChecaMovimentoPeca(ptDest.getX(), ptDest.getY() ) != true )
-				throw new MovimentoInvalido();*/
-			
  /* ***************************************** Verificar os xeques ************************************************* */
 			if ( PreverXeque(pecaDestino , ptOrig , ptDest) )
 				throw new ReiEmXeque();

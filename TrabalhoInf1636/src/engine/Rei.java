@@ -63,7 +63,7 @@ public class Rei implements Peca {
 		int distX = pt0.getX() - xFinal ;
 		int distY = pt0.getY() - yFinal ;
 		boolean sePode;
-		
+				
 		comida = Tabuleiro.getPeca(yFinal, xFinal) ;
 		
 		if ( !movimentou && distY == 0 )
@@ -79,7 +79,7 @@ public class Rei implements Peca {
 				throw new RoqueEsquerda(pt0.getX() - 4 , pt0.getY() );
 			}
 		}
-		
+				
 		sePode = pt0.Vizinho(new Ponto( xFinal , yFinal) ) ;
 		
 		if ( !movimentou )
@@ -123,29 +123,51 @@ public class Rei implements Peca {
 		Peca p1    = Tabuleiro.getPeca(pt0.getY() , pt0.getX() + 1 ) ;
 		Peca p2    = Tabuleiro.getPeca(pt0.getY() , pt0.getX() + 2 ) ;
 		Peca Torre = Tabuleiro.getPeca(pt0.getY() , pt0.getX() + 3 ) ;
+		Ponto pOriginal = new Ponto(pt0.getX(), pt0.getY());
+		
+		boolean reiState;
+		
+		if(lado == 'b')
+			reiState = Tabuleiro.getXequeReiBranco();
+		else
+			reiState = Tabuleiro.getXequeReiPreto();
 		
 		if (lado == 'b' && Tabuleiro.ChecaXequeReiBranco() )
+		{
+			Tabuleiro.XequeReiBranco(reiState);
 			return false;
+		}
 		if (lado == 'p' && Tabuleiro.ChecaXequeReiPreto() )
+		{
+			Tabuleiro.XequeReiPreto(reiState);
 			return false;
-			
+		}
+		
 		if (lado == 'b')
 		{
-			Tabuleiro.setReiBranco(pt0.getX() - 1  , pt0.getY());
+			Tabuleiro.setReiBranco(pt0.getX() + 1  , pt0.getY());
 			if(Tabuleiro.ChecaXequeReiBranco())
 			{
-				Tabuleiro.setReiBranco(pt0);
+				Tabuleiro.XequeReiBranco(reiState);
+				Tabuleiro.setReiBranco(pOriginal);
 				return false;
 			}
+
+			Tabuleiro.XequeReiBranco(reiState);
+			Tabuleiro.setReiBranco(pOriginal);
 		}
 		else
 		{
-			Tabuleiro.setReiPreto(pt0.getX() - 1  , pt0.getY());
+			Tabuleiro.setReiPreto(pt0.getX() + 1  , pt0.getY());
 			if(Tabuleiro.ChecaXequeReiPreto())
 			{
-				Tabuleiro.setReiPreto(pt0);
+				Tabuleiro.XequeReiPreto(reiState);
+				Tabuleiro.setReiPreto(pOriginal);
 				return false;
 			}
+
+			Tabuleiro.XequeReiPreto(reiState);
+			Tabuleiro.setReiPreto(pOriginal);
 		}
 		
 		
@@ -159,50 +181,53 @@ public class Rei implements Peca {
 		Peca p2    = Tabuleiro.getPeca(pt0.getY() , pt0.getX() - 2 ) ;
 		Peca p3    = Tabuleiro.getPeca(pt0.getY() , pt0.getX() - 3 ) ;
 		Peca Torre = Tabuleiro.getPeca(pt0.getY() , pt0.getX() - 4 ) ;
+		Ponto pOriginal = new Ponto(pt0.getX(), pt0.getY());
+		
+		boolean reiState;
+		
+		if(lado == 'b')
+			reiState = Tabuleiro.getXequeReiBranco();
+		else
+			reiState = Tabuleiro.getXequeReiPreto();
 		
 		if (lado == 'b' && Tabuleiro.ChecaXequeReiBranco() )
+		{
+			Tabuleiro.XequeReiBranco(reiState);
 			return false;
+		}
 		if (lado == 'p' && Tabuleiro.ChecaXequeReiPreto() )
+		{
+			Tabuleiro.XequeReiPreto(reiState);
 			return false;
+		}
 		
 		if (lado == 'b')
 		{
 			Tabuleiro.setReiBranco(pt0.getX() - 1  , pt0.getY());
 			if(Tabuleiro.ChecaXequeReiBranco())
 			{
-				Tabuleiro.setReiBranco(pt0);
+				Tabuleiro.XequeReiBranco(reiState);
+				Tabuleiro.setReiBranco(pOriginal);
 				return false;
 			}
+
+			Tabuleiro.XequeReiBranco(reiState);
+			Tabuleiro.setReiBranco(pOriginal);
 		}
 		else
 		{
 			Tabuleiro.setReiPreto(pt0.getX() - 1  , pt0.getY());
 			if(Tabuleiro.ChecaXequeReiPreto())
 			{
-				Tabuleiro.setReiPreto(pt0);
+				Tabuleiro.XequeReiPreto(reiState);
+				Tabuleiro.setReiPreto(pOriginal);
 				return false;
 			}
+
+			Tabuleiro.XequeReiPreto(reiState);
+			Tabuleiro.setReiPreto(pOriginal);
 		}
-		
-		if (lado == 'b')
-		{
-			Tabuleiro.setReiBranco(pt0.getX() - 2  , pt0.getY());
-			if(Tabuleiro.ChecaXequeReiBranco())
-			{
-				Tabuleiro.setReiBranco(pt0);
-				return false;
-			}
-		}
-		else
-		{
-			Tabuleiro.setReiPreto(pt0.getX() - 2  , pt0.getY());
-			if(Tabuleiro.ChecaXequeReiPreto())
-			{
-				Tabuleiro.setReiPreto(pt0);
-				return false;
-			}
-		}
-		
+				
 		return (p1 == null) && (p2 == null) && (p3 == null) && ( !Torre.getSpecial() ) ;
 	}
 	
