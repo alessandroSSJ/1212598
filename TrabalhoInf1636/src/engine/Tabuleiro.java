@@ -355,7 +355,6 @@ public class Tabuleiro {
 						Peca atual = pecas[j][i];
 						if ( atual != null && atual.getLado() == lado && atual != redondeza && atual.VefXeque())
 						{
-							System.out.printf("Somei aqui a peça %s (%d,%d)\n" , atual.getTipo() , direcaoX,direcaoY);
 							numXequesRedondezas++;
 							flag = true;
 						}
@@ -366,11 +365,10 @@ public class Tabuleiro {
 				if(temp != null)
 					tab.CriaPeca(temp.getPonto() , temp);
 				
-				System.out.printf("Pega rei de (%d,%d) e bota em (%d,%d)\n" , direcaoX,direcaoY , posOriginal.getX(), posOriginal.getY());
 				/* Retorna rei para sua posição de origem */
 			}
 			else
-				{numXequesRedondezas++;System.out.printf("Somei aqui (%d,%d)\n" , direcaoX,direcaoY);} 
+				numXequesRedondezas++;
 		}
 		
 		System.out.printf("NUMERO DE XEQUES NA REDONDEZA : %d\n" , numXequesRedondezas);
@@ -413,9 +411,7 @@ public class Tabuleiro {
 			
 		 /* Retorna rei para sua posição de origem */
 		tab.ChangePeca( posOriginal.getY(), posOriginal.getX() , pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX());
-						
-		System.out.printf("NINGUEM PODE COMER A PECA\n");
-	
+							
 		/* ****************************************************************************************************** */
 		
 		/* Se chegar aqui, significa que ninguém pode comer aquela única peça de xeque, portanto, se ela for um cavalo
@@ -443,7 +439,6 @@ public class Tabuleiro {
 				{	
 					if ( Chega(pecasDeXeque[0].getPonto(), posOriginal , atual ) )
 					{
-						System.out.printf("A peça %s na posicao (%d,%d) pode intersectar\n" , atual.getTipo() , atual.getPonto().getX() , atual.getPonto().getY());
 						return false;
 					}
 				}
