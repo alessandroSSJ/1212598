@@ -100,7 +100,6 @@ public class TabThread extends Thread{
 		Peca pecaOrigem = Tabuleiro.getPeca( ptOrig.getY() , ptOrig.getX() )  ;
 		Peca pecaDestino = Tabuleiro.getPeca( ptDest.getY() , ptDest.getX() ) ;
 
-	//	System.out.printf("PONTO DESTINO : (%d,%d)\n" , ptDest.getX() , ptDest.getY());
 		
 		/* Movimentação das peças */
 		
@@ -255,11 +254,12 @@ public class TabThread extends Thread{
 	}
 	
 	/** Verifica se a jogada atual deixa o rei em xeque */
-	private boolean PreverXeque(Peca pecaDestino , Ponto ptOrig , Ponto ptDest)
+	public static boolean PreverXeque(Peca pecaDestino , Ponto ptOrig , Ponto ptDest)
 	{
-		if(Tabuleiro.getVez() == 'b' )
+		if(Tabuleiro.getPeca(ptOrig).getLado() == 'b' )
 		{
 			Peca temp = pecaDestino;
+			
 			boolean reiState = Tabuleiro.getXequeReiBranco();
 			
 			if ( temp != null )
@@ -276,6 +276,7 @@ public class TabThread extends Thread{
 			}
 			
 			Tabuleiro.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
+	
 			tab.CriaPeca(ptDest , temp);
 			
 			return false;

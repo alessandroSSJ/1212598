@@ -12,6 +12,7 @@
 package engine;
 
 
+import threadsxadrez.TabThread;
 import auxiliar.Ponto;
 import excecoes.AtacarPeca;
 
@@ -119,9 +120,6 @@ public class Tabuleiro {
 		Peca temp = pecas[linhaD][colunaD];
 		Peca orig = pecas[linhaO][colunaO];
 		Peca dest = pecas[linhaD][colunaD];
-		
-		//System.out.printf("Peca1 : "); System.out.println(orig.getTipo());
-		//if (dest!=null) {System.out.printf("Peca2 : "); System.out.println(dest.getTipo());} else System.out.printf("Peca2 : null\n");
 		
 		orig.setPonto(colunaD,linhaD);
 		
@@ -347,7 +345,7 @@ public class Tabuleiro {
 				if (temp != null)
 					tab.ComePeca(temp.getPonto());
 				
-				tab.ChangePeca(yOriginal , xOriginal , direcaoY , direcaoX);				
+				Tabuleiro.ChangePeca(yOriginal , xOriginal , direcaoY , direcaoX);				
 			
 				for ( j = 0 ; j < Tabuleiro.getLinhas() && !flag ; j++ )
 					for ( i = 0 ; i < Tabuleiro.getColunas() && !flag ; i++)
@@ -360,7 +358,7 @@ public class Tabuleiro {
 						}
 					}
 				
-				tab.ChangePeca(direcaoY , direcaoX , yOriginal, xOriginal);
+				Tabuleiro.ChangePeca(direcaoY , direcaoX , yOriginal, xOriginal);
 				
 				if(temp != null)
 					tab.CriaPeca(temp.getPonto() , temp);
@@ -393,22 +391,28 @@ public class Tabuleiro {
 		
 		xOriginal = posOriginal.getX();
 		yOriginal = posOriginal.getY();
+
+		Ponto pontoPeca = new Ponto(pecasDeXeque[0].getPonto().getX(), pecasDeXeque[0].getPonto().getY());
 		
-		tab.ChangePeca(pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX() , posOriginal.getY(), posOriginal.getX());
+		Tabuleiro.ChangePeca(pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX() , posOriginal.getY(), posOriginal.getX());
 		
 		for ( j = 0 ; j < Tabuleiro.getLinhas() ; j++ )
 			for ( i = 0 ; i < Tabuleiro.getColunas() ; i++)
 			{
 				Peca atual = pecas[j][i];
-				if ( atual != null && atual.getLado() != lado && atual.getTipo()!="rei" && atual.VefXeque())
+				if ( atual != null && atual.getLado() != lado && atual.getTipo()!="rei" && atual.VefXeque() )
 				{
-					tab.ChangePeca( posOriginal.getY(), posOriginal.getX() , pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX());    /* Retorna rei para sua posição de origem */				
-					return false ; /* pelo menos uma peça pode comer a única de xeque, não é mate */
+					Tabuleiro.ChangePeca( posOriginal.getY(), posOriginal.getX() , pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX());    /* Retorna rei para sua posição de origem */		
+					
+					if (!TabThread.PreverXeque(pecasDeXeque[0], new Ponto (atual.getPonto().getX() , atual.getPonto().getY()), pontoPeca )) /* Testa se de fato pode mecher a peça */
+						return false ; /* pelo menos uma peça pode comer a única de xeque, não é mate */
+					else
+						Tabuleiro.ChangePeca(pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX() , posOriginal.getY(), posOriginal.getX());;
 				}
 			}
 			
 		 /* Retorna rei para sua posição de origem */
-		tab.ChangePeca( posOriginal.getY(), posOriginal.getX() , pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX());
+		Tabuleiro.ChangePeca( posOriginal.getY(), posOriginal.getX() , pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX());
 							
 		/* ****************************************************************************************************** */
 		
