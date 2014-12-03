@@ -25,10 +25,11 @@ public class Tabuleiro {
 	
 	private static final int LINHAS = 8 ; 
 	private static final int COLUNAS = 8;
+
 	
 	/** Indica de quem é a vez */
 	
-	private static char vez = 'b' ;
+	private static char vez ;
 	
 	/** Matriz de peças que irá gerar o jogo, caso alguma posição da matriz seja
 	 * null, significa que não há peças naquela posição. O tamanho da matriz
@@ -38,13 +39,13 @@ public class Tabuleiro {
 	private static Peca pecas[][] ;
 	
 	/** Numero de rodadas */
-	private static int numRodadas = 0 ;
+	private static int numRodadas ;
 	
 	/** Posicao dos reis */
 	private static Ponto reiPreto;
 	private static Ponto reiBranco;
-	private static boolean xequeReiPreto = false;
-	private static boolean xequeReiBranco = false;
+	private static boolean xequeReiPreto;
+	private static boolean xequeReiBranco;
 	
 	private Tabuleiro()
 	{
@@ -90,13 +91,90 @@ public class Tabuleiro {
 		
 		pecas[LINHAS-1][4] = new Rei('p' , LINHAS-1 , 4); 
 		reiPreto = new Ponto(4 , LINHAS-1);
+		
+		vez = 'b';
+		xequeReiPreto = false;
+		xequeReiBranco = false;
+		numRodadas = 0;
 	}
+	
+	/** Overloadind, este construtor é para criar um tabuleiro a partir de um arquivo externo*/
+	private Tabuleiro(String[][] arquivo)
+	{
+		int i;
+		pecas = new Peca[LINHAS][COLUNAS] ;
+		
+		numRodadas = Integer.parseInt(arquivo[9][0]);
+		//System.out.printf("do lado");System.out.print(arquivo[9][0]); System.out.printf("do lado");
+		for(i = 0 ; i < LINHAS ; i++)
+			for(int j = 0 ; j < COLUNAS ; j++)
+			{
+				String atual = arquivo[i][j];
+				
+				if ( atual.charAt(0) == 'B' )
+					pecas[i][j] = new Bispo(atual.charAt(1) , i , j  );
+				else if ( atual.charAt(0) == 'C' )
+					pecas[i][j] = new Cavalo(atual.charAt(1) , i , j  );
+				else if ( atual.charAt(0) == 'D' )
+					pecas[i][j] = new Dama(atual.charAt(1) , i , j  );
+				else if ( atual.charAt(0) == 'T' )
+				{
+					boolean movimentou;
+					
+					if ( atual.charAt(2) == '1' )
+						movimentou = true;
+					else
+						movimentou = false;
+					
+					pecas[i][j] = new Torre(atual.charAt(1) , i , j , movimentou  );
+				}
+				else if ( atual.charAt(0) == 'R' )
+				{
+					boolean movimentou;
+					
+					if ( atual.charAt(2) == '1' )
+						movimentou = true;
+					else
+						movimentou = false;
+					
+					pecas[i][j] = new Rei(atual.charAt(1) , i , j , movimentou  );
+				}
+				else if ( atual.charAt(0) == 'P' )
+				{
+
+					boolean pulou;
+					
+					if ( atual.charAt(2) == '1' )
+						pulou = true;
+					else
+						pulou = false;
+					
+					pecas[i][j] = new Peao(atual.charAt(1) , i , j , pulou , numRodadas );
+				}
+				else
+					pecas[i][j] = null;
+			}
+		
+		
+		vez = arquivo[8][0].charAt(0);
+		
+		xequeReiPreto = false;
+		xequeReiBranco = false;
+		}
 	
 	/** Pega a única instancia do tabuleiro  SINGLETON*/
 	public static Tabuleiro getTabuleiro()
 	{
 		if ( tab == null )
 			tab = new Tabuleiro();
+		return tab;
+	}
+	
+	/** Pega a única instancia do tabuleiro, porém com ele sendo carregado por um arquivo externo*/
+	public static Tabuleiro getTabuleiro(String[][] arquivo)
+	{
+		if ( tab == null )
+			tab = new Tabuleiro(arquivo);
 		return tab;
 	}
 	
@@ -227,8 +305,11 @@ public class Tabuleiro {
 		int i;
 		int j;
 		
-		for ( j = 0 ; j < Tabuleiro.getLinhas() ; j++ )
-			for ( i = 0 ; i < Tabuleiro.getColunas() ; i++)
+		int numLinhas = Tabuleiro.getLinhas();
+		int numColunas = Tabuleiro.getColunas();
+		
+		for ( j = 0 ; j < numLinhas ; j++ )
+			for ( i = 0 ; i < numColunas ; i++)
 			{
 				Peca atual = pecas[j][i];
 				if ( atual != null && atual.getLado() == lado && atual.VefXeque())
@@ -271,8 +352,11 @@ public class Tabuleiro {
 		
 		/* Verificando xeque simples e pegando as peças responsáveis */
 		
-		for ( j = 0 ; j < Tabuleiro.getLinhas() ; j++ )
-			for ( i = 0 ; i < Tabuleiro.getColunas() ; i++)
+		int numLinhas = Tabuleiro.getLinhas();
+		int numColunas = Tabuleiro.getColunas();
+		
+		for ( j = 0 ; j < numLinhas ; j++ )
+			for ( i = 0 ; i < numColunas ; i++)
 			{
 				Peca atual = pecas[j][i];
 				if ( atual != null && atual.getLado() == lado && atual.VefXeque())
@@ -403,11 +487,12 @@ public class Tabuleiro {
 				if ( atual != null && atual.getLado() != lado && atual.getTipo()!="rei" && atual.VefXeque() )
 				{
 					Tabuleiro.ChangePeca( posOriginal.getY(), posOriginal.getX() , pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX());    /* Retorna rei para sua posição de origem */		
-					
+			
 					if (!TabThread.PreverXeque(pecasDeXeque[0], new Ponto (atual.getPonto().getX() , atual.getPonto().getY()), pontoPeca )) /* Testa se de fato pode mecher a peça */
-						return false ; /* pelo menos uma peça pode comer a única de xeque, não é mate */
+						return false;
 					else
 						Tabuleiro.ChangePeca(pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX() , posOriginal.getY(), posOriginal.getX());;
+	
 				}
 			}
 			
@@ -433,8 +518,11 @@ public class Tabuleiro {
 		else
 			posOriginal = Tabuleiro.getReiBranco();
 		
-		for ( j = 0 ; j < Tabuleiro.getLinhas() ; j++ )
-			for ( i = 0 ; i < Tabuleiro.getColunas() ; i++)
+		numLinhas = Tabuleiro.getLinhas();
+		numColunas = Tabuleiro.getColunas();
+		
+		for ( j = 0 ; j < numLinhas ; j++ )
+			for ( i = 0 ; i < numColunas ; i++)
 			{
 				Peca atual = pecas[j][i];
 				if ( atual != null && atual.getLado() != lado && atual.getTipo() != "rei" )
@@ -562,6 +650,12 @@ public class Tabuleiro {
 	{
 		reiPreto = novaPos;
 	}
+	
+	public static void DestruirTabuleiro()
+	{
+		tab = null;
+	}
+
 	
 	
 }

@@ -47,6 +47,17 @@ public class Torre implements Peca {
 		comida = null;
 	}
 	
+	public Torre( char lado , int y , int x , boolean movimentou )
+	{
+		this.lado = lado ;
+		
+		pt0 = new Ponto( x , y ) ;
+		
+		comida = null;
+		
+		this.movimentou = movimentou ;
+	}
+	
 	public boolean ChecaPosicionamento(int xFinal , int yFinal) throws AtacarPeca 
 	{
 		boolean pode = ( pt0.AlinhadoVH(new Ponto( xFinal , yFinal) ) && !PecaNoCaminho(xFinal , yFinal) ) ;
@@ -179,7 +190,6 @@ public class Torre implements Peca {
 		return comida;
 	}
 	
-	/* Nada em especial para esta peça */
 	public boolean getSpecial()
 	{ 
 		return movimentou;

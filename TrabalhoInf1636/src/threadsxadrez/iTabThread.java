@@ -13,13 +13,16 @@ import gui.*;
 
 public class iTabThread extends Thread {
 	
+	/** Flag */
+	private boolean continua = true;
+	
 	iTabuleiro iTab = null;
 	
 	public iTabThread()
 	{
 		super("Thread da interface do tabuleiro");
 		iTab = new iTabuleiro();
-	//	iTab.MenuOpcoes();
+		iTab.MenuOpcoes();
 		iTab.DrawPecas(TabThread.getTabuleiro());
 		iTab.DrawBackground();	
 	}
@@ -29,9 +32,17 @@ public class iTabThread extends Thread {
 	@Override
 	public void run()
 	{
-		while(true)
+		while(continua)
 		{	
 			iTab.repaint();
+			
+			if (iOptions.readOption() == iOptions.MENU && iConfirmation.readResponse() == iConfirmation.OK)
+			{
+				iTab.setVisible(false);
+				iTab.dispose();
+				continua = false;
+			}
 	    }
 	}
+
 }

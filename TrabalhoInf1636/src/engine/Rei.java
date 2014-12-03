@@ -40,6 +40,17 @@ public class Rei implements Peca {
 		comida = null;
 	}
 	
+	public Rei( char lado , int y , int x , boolean movimentou )
+	{
+		this.lado = lado ;
+		
+		pt0 = new Ponto( x , y ) ;
+		
+		comida = null;
+		
+		this.movimentou = movimentou;
+	}
+	
 	public boolean ChecaPosicionamento(int xFinal , int yFinal) throws AtacarPeca
 	{
 		boolean pode = pt0.Vizinho(new Ponto( xFinal , yFinal) ) ;

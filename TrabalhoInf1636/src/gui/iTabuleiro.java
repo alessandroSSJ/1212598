@@ -23,8 +23,8 @@ public class iTabuleiro extends JFrame implements MouseListener {
 	private static final long serialVersionUID = 1L;
 	
 	/** Dimensões reais de um tabuleiro de xadrez */
-	private static final int HEIGHT =  8 * iFundo.getAltura();
-	private static final int WIDTH =   8 * iFundo.getLargura();// + iOptions.getLargura() ;
+	private static final int HEIGHT =  8 * iFundo.getAltura();// + 20 ;
+	private static final int WIDTH =   8 * iFundo.getLargura() + iOptions.getLargura() ;
 	
 	/** Pontos clicados pelo mouse para movimentar peças */
 	private static Ponto ptOrig = null ;

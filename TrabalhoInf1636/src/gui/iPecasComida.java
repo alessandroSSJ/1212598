@@ -12,9 +12,7 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 
@@ -48,7 +46,6 @@ public class iPecasComida extends JPanel {
 	{
 		super.paintComponent(g);
 		int i = 0 ;
-		int j = 0 ;
 		int realHeight = 334;
 		int z = realHeight/2 ;
 		

@@ -29,13 +29,19 @@ import excecoes.PropriaPeca;
 import excecoes.ReiEmXeque;
 import excecoes.RoqueDireita;
 import excecoes.RoqueEsquerda;
+import gui.iConfirmation;
+import gui.iOptions;
 import gui.iPecasComida;
+import gui.iPrincipal;
 import gui.iPromotion;
 import gui.iTabuleiro;
 
 public class TabThread extends Thread{
 	
 	public static Tabuleiro tab = null;
+	
+	/** Flag */
+	private boolean continua = true;
 	
 	/** Arquivos de som*/
 	private static File mov = new File("Sons/mov.wav");
@@ -85,10 +91,48 @@ public class TabThread extends Thread{
 	    }
 	}
 	
+	/* Tabuleiro de arquivo externo */
+	public TabThread( String[][] arquivo )
+	{
+		super("Thread do tabuleiro");
+		tab = Tabuleiro.getTabuleiro(arquivo);
+		
+		AudioInputStream stream;
+	    AudioFormat format;
+	    DataLine.Info info;
+
+	    try
+	    {
+	    	/** Som da movimentação das peças */
+		    stream = AudioSystem.getAudioInputStream(mov);
+		    format = stream.getFormat();
+		    info = new DataLine.Info(Clip.class, format);
+		    clipMov = (Clip) AudioSystem.getLine(info);
+		    clipMov.open(stream);
+		    
+		    /** Som de xeque mate */
+		    stream = AudioSystem.getAudioInputStream(movMate);
+		    format = stream.getFormat();
+		    info = new DataLine.Info(Clip.class, format);
+		    clipMate = (Clip) AudioSystem.getLine(info);
+		    clipMate.open(stream);
+		    
+		    /** Som de movimentação inválida */
+		    stream = AudioSystem.getAudioInputStream(movError);
+		    format = stream.getFormat();
+		    info = new DataLine.Info(Clip.class, format);
+		    clipError = (Clip) AudioSystem.getLine(info);
+		    clipError.open(stream);
+	    }
+	    catch(Exception e)
+	    {
+	    	e.printStackTrace();
+	    }
+	}
+	
 	/** Faz uma jogada no tabuleiro */
 	public void Rodada()
 	{
-		
 		/* Uma rodada normal */
 		
 		if ( !iTabuleiro.getJogadaValida() )
@@ -112,6 +156,13 @@ public class TabThread extends Thread{
 			if ( PreverXeque(pecaDestino , ptOrig , ptDest) )
 				throw new ReiEmXeque();
 /* ************************************************************************************************************************ */
+			
+			/* Se eu passei, meu rei nao ta em xeque */
+			
+			if (Tabuleiro.getVez() == 'b')
+				Tabuleiro.XequeReiBranco(false);
+			else
+				Tabuleiro.XequeReiPreto(false);
 			
 			if (  pecaOrigem.ChecaMovimentoPeca(ptDest.getX(), ptDest.getY() ) != true )
 				throw new MovimentoInvalido();
@@ -144,9 +195,10 @@ public class TabThread extends Thread{
 		}
 		catch(AoPassar e)
 		{			
+			Peca temp = pecaOrigem.pecaComida();
 			Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
-			tab.ComePeca(pecaOrigem.pecaComida().getPonto());
-			
+			tab.ComePeca(temp.getPonto());
+			iPecasComida.sendPeca("Pecas/" + temp.getLado() + "_" + temp.getTipo() + ".gif" , temp.getLado());
 			clipMov.loop(1);
 		}
 		catch(RoqueDireita e)
@@ -167,7 +219,11 @@ public class TabThread extends Thread{
 			p.DrawPecas();
 			
 			if(e.getPecaComida() != null)
+			{
+				Peca temp = (Peca) e.getPecaComida();
 				tab.ComePeca(e.getPecaComida());
+				iPecasComida.sendPeca("Pecas/" + temp.getLado() + "_" + temp.getTipo() + ".gif" , temp.getLado());
+			}
 			
 			Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 			
@@ -276,7 +332,7 @@ public class TabThread extends Thread{
 			}
 			
 			Tabuleiro.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
-	
+			Tabuleiro.XequeReiPreto(reiState);
 			tab.CriaPeca(ptDest , temp);
 			
 			return false;
@@ -300,7 +356,7 @@ public class TabThread extends Thread{
 			}
 			
 			Tabuleiro.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
-			
+			Tabuleiro.XequeReiPreto(reiState);
 			tab.CriaPeca(ptDest , temp);
 			
 			return false;
@@ -312,9 +368,22 @@ public class TabThread extends Thread{
 	/** Metodo run*/
 	@Override public void run()
 	{
-		while(true)
+		while(continua)
 		{
 			Rodada();
+			if ( iConfirmation.readResponse() == iConfirmation.NOTOK )
+				iConfirmation.close();
+			
+			if (iOptions.readOption() == iOptions.SAIR && iConfirmation.readResponse() == iConfirmation.OK)
+				System.exit(1);
+			else if (iOptions.readOption() == iOptions.MENU && iConfirmation.readResponse() == iConfirmation.OK)
+			{
+				iOptions.zeraOption();
+				Tabuleiro.DestruirTabuleiro();
+				iPrincipal.StartGame();
+				continua = false;
+				iConfirmation.close();
+			}
 		}
 	}
 	

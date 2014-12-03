@@ -41,6 +41,20 @@ public class Peao implements Peca {
 		comida = null;
 	}
 	
+	public Peao( char lado , int y, int x , boolean pulou, int numRodadas)
+	{
+		this.lado = lado ;
+		
+		pt0 = new Ponto(x,y) ;
+		
+		comida = null;
+		
+		this.pulou = pulou;
+		
+		if ( pulou )
+			this.rodadaDePulo = numRodadas - 1;
+	}
+	
 	public boolean ChecaPosicionamento(int xFinal , int yFinal) throws AtacarPeca
 	{
 		boolean pode;

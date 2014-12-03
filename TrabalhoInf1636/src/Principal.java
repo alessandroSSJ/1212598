@@ -8,20 +8,13 @@
  */
 
 
-import threadsxadrez.*;
+import gui.iPrincipal;
 
 public class Principal {
 
 	public static void main(String[] args) {
 		
-		TabThread tab = new TabThread();
-		iTabThread iTab = new iTabThread() ;
-
-		/* Inicializando as threads */
-		
-		tab.start();
-		iTab.start();
-		
-	}
+		iPrincipal.StartGame();
+}
 
 }
