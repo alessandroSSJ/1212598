@@ -48,7 +48,6 @@ public class iFundo extends JLayeredPane {
 				boolean pintou = false;
 				boolean selecionou = false;
 				Graphics2D g2d = (Graphics2D) g;
-				
 				Rectangle2D rt = new Rectangle2D.Double(leftPoint , rightPoint , WIDTH , HEIGHT) ;
 				
 				/** Peça selecionada (Para pintar o retângulo de azul) */

@@ -41,6 +41,16 @@ public class iPecasComida extends JPanel {
 	private static String vetorBranco[] = new String[24];
 	private static int numPreto = 0   ;
 	
+	public iPecasComida()
+	{
+		super();
+		
+		vetorPreto = new String[24];
+		numBranco = 0  ;
+		vetorBranco = new String[24];
+		numPreto = 0   ;
+	}
+	
 	/** Overriding na classe paintComponent */
 	public void paintComponent(Graphics g)
 	{

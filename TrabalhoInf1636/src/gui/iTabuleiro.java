@@ -38,7 +38,7 @@ public class iTabuleiro extends JFrame implements MouseListener {
 	
 	public iTabuleiro()
 	{
-		super("Jogo de Xadrez, by Marcelo e Alessandro") ;
+		super("Jogo de Xadrez by Marcelo e Alessandro") ;
 		setLayout(new BorderLayout());
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		
@@ -55,6 +55,7 @@ public class iTabuleiro extends JFrame implements MouseListener {
 		setResizable(false);
 		
 		addMouseListener( (MouseListener) this);
+
 	}
 	
 	/** Desenha o LayeredPane do fundo */

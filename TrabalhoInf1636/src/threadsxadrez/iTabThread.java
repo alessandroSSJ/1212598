@@ -24,7 +24,7 @@ public class iTabThread extends Thread {
 		iTab = new iTabuleiro();
 		iTab.MenuOpcoes();
 		iTab.DrawPecas(TabThread.getTabuleiro());
-		iTab.DrawBackground();	
+		iTab.DrawBackground();
 	}
 	
 	/** Metodo run*/
@@ -40,6 +40,7 @@ public class iTabThread extends Thread {
 			{
 				iTab.setVisible(false);
 				iTab.dispose();
+				iTab = null;
 				continua = false;
 			}
 	    }

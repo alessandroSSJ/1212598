@@ -37,7 +37,6 @@ private static final long serialVersionUID = 1L;
 	
 	
 	/** Opções */
-	iOptions op;
 	
 	public iPrincipal()
 	{
@@ -102,7 +101,6 @@ private static final long serialVersionUID = 1L;
 	
 	public void Close()
 	{
-		//System.out.printf("Fechando\n");
 		this.setVisible(false);
 		this.dispose();
 	}

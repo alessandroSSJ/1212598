@@ -40,7 +40,7 @@ public class MenuThread extends Thread{
 			menu = new MenuThread();
 			menu.start();
 		}
-		//System.out.println(continua);
+		
 		iMenu = princ;
 		return menu;
 	}
@@ -53,7 +53,6 @@ public class MenuThread extends Thread{
 			System.out.printf("");
 			if(continua)
 			{
-				//System.out.printf("");
 				if(iPrincipal.getInitializationOptions() == iPrincipal.INICIAR_UM_JOGO)
 				{
 					TabThread tab = new TabThread();

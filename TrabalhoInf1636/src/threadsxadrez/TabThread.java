@@ -61,7 +61,7 @@ public class TabThread extends Thread{
 		AudioInputStream stream;
 	    AudioFormat format;
 	    DataLine.Info info;
-
+	    
 	    try
 	    {
 	    	/** Som da movimentação das peças */
@@ -91,7 +91,7 @@ public class TabThread extends Thread{
 	    }
 	}
 	
-	/* Tabuleiro de arquivo externo */
+	/** Tabuleiro de arquivo externo */
 	public TabThread( String[][] arquivo )
 	{
 		super("Thread do tabuleiro");

@@ -105,7 +105,7 @@ public class Tabuleiro {
 		pecas = new Peca[LINHAS][COLUNAS] ;
 		
 		numRodadas = Integer.parseInt(arquivo[9][0]);
-		//System.out.printf("do lado");System.out.print(arquivo[9][0]); System.out.printf("do lado");
+		
 		for(i = 0 ; i < LINHAS ; i++)
 			for(int j = 0 ; j < COLUNAS ; j++)
 			{
@@ -131,6 +131,25 @@ public class Tabuleiro {
 				else if ( atual.charAt(0) == 'R' )
 				{
 					boolean movimentou;
+					char lado = atual.charAt(1);
+					if (lado == 'b')
+					{
+						reiBranco = new Ponto(j,i);
+						
+						if ( atual.charAt(3) == '1' )
+							xequeReiBranco = true;
+						else
+							xequeReiBranco = false;
+					}
+					else
+					{
+						reiPreto = new Ponto(j,i);
+						
+						if ( atual.charAt(3) == '1' )
+							xequeReiPreto = true;
+						else
+							xequeReiPreto = false;
+					}
 					
 					if ( atual.charAt(2) == '1' )
 						movimentou = true;
@@ -157,9 +176,6 @@ public class Tabuleiro {
 		
 		
 		vez = arquivo[8][0].charAt(0);
-		
-		xequeReiPreto = false;
-		xequeReiBranco = false;
 		}
 	
 	/** Pega a única instancia do tabuleiro  SINGLETON*/
