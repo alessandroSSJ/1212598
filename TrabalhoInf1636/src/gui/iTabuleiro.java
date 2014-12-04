@@ -23,8 +23,8 @@ public class iTabuleiro extends JFrame implements MouseListener {
 	private static final long serialVersionUID = 1L;
 	
 	/** Dimensões reais de um tabuleiro de xadrez */
-	private static final int HEIGHT =  8 * iFundo.getAltura();// + 20 ;
-	private static final int WIDTH =   8 * iFundo.getLargura() + iOptions.getLargura() ;
+	private static final int HEIGHT =  640;//8 * iFundo.getAltura();// + 20 ;
+	private static final int WIDTH =   890;//8 * iFundo.getLargura() + iOptions.getLargura() ;
 	
 	/** Pontos clicados pelo mouse para movimentar peças */
 	private static Ponto ptOrig = null ;
@@ -39,7 +39,9 @@ public class iTabuleiro extends JFrame implements MouseListener {
 	public iTabuleiro()
 	{
 		super("Jogo de Xadrez by Marcelo e Alessandro") ;
+		
 		setLayout(new BorderLayout());
+		
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		
 		op = new iOptions();
@@ -48,13 +50,17 @@ public class iTabuleiro extends JFrame implements MouseListener {
 		
 		int x = screenSize.width/2 - WIDTH/2   ;
 		int y = screenSize.height/2 - HEIGHT/2 ;
-		setBounds(x,y,WIDTH,HEIGHT); /* Posiciona o tabuleiro no meio da tela do monitor */
+		
+		setBounds(x,y,WIDTH,HEIGHT);                  /* Posiciona o tabuleiro no meio da tela do monitor */
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		setResizable(false);
 		
 		addMouseListener( (MouseListener) this);
+		
+		this.setVisible(true);
+		
 
 	}
 	
