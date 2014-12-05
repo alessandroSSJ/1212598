@@ -34,7 +34,7 @@ public class iTabThread extends Thread {
 	{
 		while(continua)
 		{	
-			//iTab.repaint();
+			iTab.repaint();
 			
 			if (iOptions.readOption() == iOptions.MENU && iConfirmation.readResponse() == iConfirmation.OK)
 			{

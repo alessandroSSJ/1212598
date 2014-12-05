@@ -23,15 +23,15 @@ public class iTabuleiro extends JFrame implements MouseListener {
 	private static final long serialVersionUID = 1L;
 	
 	/** Dimensões reais de um tabuleiro de xadrez */
-	private static final int HEIGHT =  640;//8 * iFundo.getAltura();// + 20 ;
-	private static final int WIDTH =   890;//8 * iFundo.getLargura() + iOptions.getLargura() ;
+	private static final int HEIGHT =  8 * iFundo.getAltura();
+	private static final int WIDTH =   8 * iFundo.getLargura() + iOptions.getLargura() ;
 	
 	/** Pontos clicados pelo mouse para movimentar peças */
-	private static Ponto ptOrig = null ;
-	private static Ponto ptDest = null ;
+	private static Ponto ptOrig;
+	private static Ponto ptDest;
 	
 	/** Variável para determinar se ja é o momento para realizar a jogada*/
-	private static boolean jogadaValida = false;
+	private static boolean jogadaValida;
 	
 	/** Opções */
 	iOptions op;
@@ -61,6 +61,9 @@ public class iTabuleiro extends JFrame implements MouseListener {
 		
 		this.setVisible(true);
 		
+		ptOrig = null;
+		ptDest = null;
+		jogadaValida = false;
 
 	}
 	
@@ -71,6 +74,7 @@ public class iTabuleiro extends JFrame implements MouseListener {
 		iFundo f = new iFundo() ;
 		this.setVisible(true) ;
 		this.add(f);
+		//this.pack();
 	}
 	
 	/** Desenha o LayeredPane das peças */
@@ -79,6 +83,7 @@ public class iTabuleiro extends JFrame implements MouseListener {
 		iPeca p = new iPeca(tab) ;
 		this.setVisible(true);
 		this.add(p) ;
+		this.pack();
 	}
 	
 	/** Desenha o menu de opções */
@@ -138,8 +143,8 @@ public class iTabuleiro extends JFrame implements MouseListener {
     public void mouseClicked(MouseEvent e)
 	{
 		int xi = e.getX() / iFundo.getLargura() ;
-		int yi = (8*iFundo.getAltura() - e.getY() ) / iFundo.getAltura()  ;
-		
+		int yi = (8*iFundo.getAltura() - e.getY() + 30 ) / iFundo.getAltura()  ;
+
 		if( ptOrig == null && ptDest == null && xi >= 0 && xi <= 7 && yi >= 0 && yi <= 7 )
 		{
 			ptOrig = new Ponto(xi , yi ) ;

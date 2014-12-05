@@ -11,8 +11,10 @@ package gui;
 
 import java.awt.*      ; 
 import java.io.*       ;
+
 import javax.imageio.* ;
 import javax.swing.*   ;
+
 import engine.*        ;
 
 public class iPeca extends JLayeredPane {
@@ -26,6 +28,8 @@ public class iPeca extends JLayeredPane {
 	{
 		super();
 		this.tab = tab;
+		setPreferredSize(new Dimension(8*iFundo.getLargura(), 8*iFundo.getAltura()));
+		this.setLayout(new BorderLayout());
 	}
 	
 	/** Overriding na classe paintComponent */

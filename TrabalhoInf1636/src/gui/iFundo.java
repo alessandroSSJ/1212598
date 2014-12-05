@@ -11,6 +11,7 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
@@ -29,6 +30,12 @@ public class iFundo extends JLayeredPane {
 	/** Dimensões de um retângulo de xadrez */
 	private static final int HEIGHT = 80  ;
 	private static final int WIDTH = 80   ;
+	
+	public iFundo()
+	{
+		super();
+		setPreferredSize(new Dimension(8*WIDTH, 8*HEIGHT));
+	}
 	
 	/** Overriding no metodo paintComponent */
 	@Override public void paintComponent(Graphics g)
