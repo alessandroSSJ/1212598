@@ -73,9 +73,9 @@ public class iOptions extends JLayeredPane {
 		menuInicial.addActionListener(new ActionListener() { 
 		public void actionPerformed(ActionEvent e)
 		      {
+				option = MENU;
 				iConfirmation con = iConfirmation.getWindow("Você deseja voltar ao menu?");
 				con.getResponse();
-				option = MENU;
 		      }
 		});
 		

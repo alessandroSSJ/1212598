@@ -12,7 +12,7 @@
 package engine;
 
 
-import threadsxadrez.TabThread;
+import observersxadrez.TabObserver;
 import auxiliar.Ponto;
 import excecoes.AtacarPeca;
 
@@ -504,7 +504,7 @@ public class Tabuleiro {
 				{
 					Tabuleiro.ChangePeca( posOriginal.getY(), posOriginal.getX() , pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX());    /* Retorna rei para sua posição de origem */		
 			
-					if (!TabThread.PreverXeque(pecasDeXeque[0], new Ponto (atual.getPonto().getX() , atual.getPonto().getY()), pontoPeca )) /* Testa se de fato pode mecher a peça */
+					if (!TabObserver.PreverXeque(pecasDeXeque[0], new Ponto (atual.getPonto().getX() , atual.getPonto().getY()), pontoPeca )) /* Testa se de fato pode mecher a peça */
 						return false;
 					else
 						Tabuleiro.ChangePeca(pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX() , posOriginal.getY(), posOriginal.getX());;

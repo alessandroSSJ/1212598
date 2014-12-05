@@ -3,12 +3,14 @@
  * com a parte funcional do jogo, isto é, organizará o mesmo
  * em rodadas, atribuirá vitórias, derrotas e etc.
  * 
- * @version 1.1
+ * (IMPLEMENTA PADRÃO DE DESIGN OBSERVER)
+ * 
+ * @version 2.0
  * @author Alessandro e Marcelo
  * @since 1.0
  */
 
-package threadsxadrez;
+package observersxadrez;
 
 import java.io.File;
 
@@ -36,12 +38,9 @@ import gui.iPrincipal;
 import gui.iPromotion;
 import gui.iTabuleiro;
 
-public class TabThread extends Thread{
+public class TabObserver extends Thread{
 	
 	public static Tabuleiro tab = null;
-	
-	/** Flag */
-	private boolean continua = true;
 	
 	/** Arquivos de som*/
 	private static File mov = new File("Sons/mov.wav");
@@ -53,7 +52,7 @@ public class TabThread extends Thread{
 	private static File movError = new File("Sons/error.wav");
 	private static Clip clipError;
 	
-	public TabThread()
+	public TabObserver()
 	{
 		super("Thread do tabuleiro");
 		tab = Tabuleiro.getTabuleiro();
@@ -92,7 +91,7 @@ public class TabThread extends Thread{
 	}
 	
 	/** Tabuleiro de arquivo externo */
-	public TabThread( String[][] arquivo )
+	public TabObserver( String[][] arquivo )
 	{
 		super("Thread do tabuleiro");
 		tab = Tabuleiro.getTabuleiro(arquivo);
@@ -131,7 +130,7 @@ public class TabThread extends Thread{
 	}
 	
 	/** Faz uma jogada no tabuleiro */
-	public void Rodada()
+	public static void Rodada()
 	{
 		/* Uma rodada normal */
 		
@@ -306,7 +305,7 @@ public class TabThread extends Thread{
 	/** get Tabuleiro */
 	public static Tabuleiro getTabuleiro()
 	{
-		return TabThread.tab;
+		return TabObserver.tab;
 	}
 	
 	/** Verifica se a jogada atual deixa o rei em xeque */
@@ -365,25 +364,17 @@ public class TabThread extends Thread{
 	}
 	
 	
-	/** Metodo run*/
-	@Override public void run()
+	/** Metodo notify*/
+	public static void Notifica()
 	{
-		while(continua)
+		Rodada();
+		
+		if (iOptions.readOption() == iOptions.SAIR && iConfirmation.readResponse() == iConfirmation.OK)
+			System.exit(1);
+		else if (iOptions.readOption() == iOptions.MENU && iConfirmation.readResponse() == iConfirmation.OK)
 		{
-			Rodada();
-			if ( iConfirmation.readResponse() == iConfirmation.NOTOK )
-				iConfirmation.close();
-			
-			if (iOptions.readOption() == iOptions.SAIR && iConfirmation.readResponse() == iConfirmation.OK)
-				System.exit(1);
-			else if (iOptions.readOption() == iOptions.MENU && iConfirmation.readResponse() == iConfirmation.OK)
-			{
-				iOptions.zeraOption();
-				Tabuleiro.DestruirTabuleiro();
-				iPrincipal.StartGame();
-				continua = false;
-				iConfirmation.close();
-			}
+			Tabuleiro.DestruirTabuleiro();
+			iPrincipal.StartGame();
 		}
 	}
 	

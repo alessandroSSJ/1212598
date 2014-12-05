@@ -11,6 +11,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import observersxadrez.TabObserver;
+import observersxadrez.iTabObserver;
+
 public class iConfirmation extends JFrame {
 
 	/**
@@ -25,7 +28,7 @@ public class iConfirmation extends JFrame {
 	public static final int NOTOK = 1;
 	public static final int IND = 2;
 	
-	private static int confirmation;
+	private static int confirmation = IND;
 	
 	private String messageLabel;
 	
@@ -78,6 +81,8 @@ public class iConfirmation extends JFrame {
 			public void actionPerformed(ActionEvent e)
 		      {
 				iConfirmation.setResponse(iConfirmation.OK);
+				TabObserver.Notifica();
+				iTabObserver.Notifica();
 		      } 
 		});
 		
@@ -92,6 +97,8 @@ public class iConfirmation extends JFrame {
 			public void actionPerformed(ActionEvent e)
 		      {
 				iConfirmation.setResponse(iConfirmation.NOTOK);
+				window.setVisible(false);
+				window.dispose();
 		      } 
 		});
 		

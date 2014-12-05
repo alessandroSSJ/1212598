@@ -11,10 +11,14 @@ package gui;
 
 import java.awt.* ;
 import java.awt.event.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 import javax.swing.*;
 
-import threadsxadrez.MenuThread;
+import observersxadrez.TabObserver;
+import observersxadrez.iTabObserver;
 
 
 
@@ -25,16 +29,6 @@ private static final long serialVersionUID = 1L;
 	/** Dimensões reais de um tabuleiro de xadrez */
 	private static final int HEIGHT =  300;
 	private static final int WIDTH =   300;
-	
-	/** Constantes de inicialização */
-	public static final int IND = 0;
-	public static final int INICIAR_UM_JOGO = 1 ;
-	public static final int CARREGAR_UM_JOGO = 2;
-	public static final int SAIR_DO_JOGO = 3 ;
-	
-	/** Inidica as opções de inicialização */
-	private static int initOption = 0 ;
-	
 	
 	/** Opções */
 	
@@ -54,7 +48,7 @@ private static final long serialVersionUID = 1L;
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		setResizable(false);
-		
+	
 	}
 	
 	public void DesenhaBotoes()
@@ -64,7 +58,7 @@ private static final long serialVersionUID = 1L;
 		{
 			public void actionPerformed(ActionEvent e)
 		      {
-				setInitializationOptions(INICIAR_UM_JOGO);
+				IniciarJogo();
 		      }
 		});
 		
@@ -73,7 +67,7 @@ private static final long serialVersionUID = 1L;
 		{
 			public void actionPerformed(ActionEvent e)
 		      {
-				setInitializationOptions(CARREGAR_UM_JOGO);
+				CarregarJogo();
 		      }
 		});
 		
@@ -82,7 +76,7 @@ private static final long serialVersionUID = 1L;
 		{
 			public void actionPerformed(ActionEvent e)
 		      {
-				setInitializationOptions(SAIR_DO_JOGO);
+				System.exit(1);
 		      }
 		});
 		
@@ -95,7 +89,6 @@ private static final long serialVersionUID = 1L;
 	public static void StartGame()
 	{
 		iPrincipal princ = new iPrincipal();
-		MenuThread.getMenu(princ);
 		princ.DesenhaBotoes();
 	}
 	
@@ -105,14 +98,73 @@ private static final long serialVersionUID = 1L;
 		this.dispose();
 	}
 	
-	public static void setInitializationOptions(int index)
+	private void IniciarJogo()
 	{
-		initOption = index;
-	}
-	public static int getInitializationOptions()
-	{
-		return initOption;
+
+		TabObserver tab = new TabObserver();
+		@SuppressWarnings("unused")
+		iTabObserver iTab = new iTabObserver() ;
+
+		/* Inicializando as threads */
+	
+		tab.start();
+		iTabObserver.Notifica();
+		close();
 	}
 	
+	private void CarregarJogo()
+	{
+		
+		JFileChooser fileChooser = new JFileChooser();
+		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) 
+		{
+		  File file = fileChooser.getSelectedFile();
+		  Scanner scanner = null;
+		  
+		  String[][] arquivo = new String[10][8];
+		  
+			try 
+			{
+				scanner = new Scanner(file);
+			} 
+			catch (FileNotFoundException e) 
+			{
+				e.printStackTrace();
+			}
+		  
+			scanner.useDelimiter("#");
+		 
+			int j;
+			int i;
+			
+			for ( j = 0 ; j < 8 ; j++ )
+			{
+				for ( i = 0 ; i < 8 ; i++)
+				{
+					arquivo[j][i] = scanner.next();
+				}
+			}
+			
+			arquivo[8][0] = scanner.next();
+			arquivo[9][0] = scanner.next();
+			
+
+			TabObserver tab = new TabObserver(arquivo);
+			@SuppressWarnings("unused")
+			iTabObserver iTab = new iTabObserver() ;
+
+			/* Inicializando as threads */
+		
+			tab.start();
+			iTabObserver.Notifica();
+			close();
+		}
+		
+	}
 	
+	private void close()
+	{
+		this.setVisible(false);
+		this.dispose();
+	}
 }

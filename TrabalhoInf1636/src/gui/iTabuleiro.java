@@ -9,14 +9,23 @@
 
 package gui;
 
-import java.awt.* ;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
-import engine.*;
-import auxiliar.*;
-import excecoes.*;
+import observersxadrez.TabObserver;
+import observersxadrez.iTabObserver;
+import auxiliar.Ponto;
+import engine.Peca;
+import engine.Tabuleiro;
+import excecoes.CorDePecaErrado;
+import excecoes.MesmaPeca;
+import excecoes.PecaOrigemNull;
+import excecoes.PropriaPeca;
 
 public class iTabuleiro extends JFrame implements MouseListener {
 	
@@ -74,7 +83,6 @@ public class iTabuleiro extends JFrame implements MouseListener {
 		iFundo f = new iFundo() ;
 		this.setVisible(true) ;
 		this.add(f);
-		//this.pack();
 	}
 	
 	/** Desenha o LayeredPane das peças */
@@ -143,7 +151,7 @@ public class iTabuleiro extends JFrame implements MouseListener {
     public void mouseClicked(MouseEvent e)
 	{
 		int xi = e.getX() / iFundo.getLargura() ;
-		int yi = (8*iFundo.getAltura() - e.getY() + 30 ) / iFundo.getAltura()  ;
+		int yi = (8*iFundo.getAltura() - e.getY() ) / iFundo.getAltura()  ;
 
 		if( ptOrig == null && ptDest == null && xi >= 0 && xi <= 7 && yi >= 0 && yi <= 7 )
 		{
@@ -164,6 +172,10 @@ public class iTabuleiro extends JFrame implements MouseListener {
 			{
 				System.out.printf("ERRO FATAL NO TRATADOR\n");
 				System.exit(1);
+			}
+			finally
+			{
+				iTabObserver.Notifica();
 			}
 		}
 		else if( ptOrig != null && ptDest == null && xi >= 0 && xi <= 7 && yi >= 0 && yi <= 7 )
@@ -192,7 +204,13 @@ public class iTabuleiro extends JFrame implements MouseListener {
 		    	e3.printStackTrace();
 		    	System.exit(1);
 		    }
+		    finally
+		    {
+		    	iTabObserver.Notifica();
+		    }
+		    
 		    setJogadaValida(true);
+		    TabObserver.Notifica();
 		}
 	}
 	
