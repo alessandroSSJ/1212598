@@ -396,15 +396,16 @@ public class TabObserver{
 		if ( promovendo )
 			return;
 		
-		Rodada();
-		
 		if (iOptions.readOption() == iOptions.SAIR && iConfirmation.readResponse() == iConfirmation.OK)
 			System.exit(1);
 		else if (iOptions.readOption() == iOptions.MENU && iConfirmation.readResponse() == iConfirmation.OK)
 		{
 			Tabuleiro.DestruirTabuleiro();
 			iPrincipal.StartGame();
+			return;
 		}
+		
+		Rodada();
 	}
 	
 }
