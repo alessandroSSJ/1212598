@@ -15,7 +15,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 
 import observersxadrez.TabObserver;
@@ -43,8 +42,6 @@ public class iPromotion extends JFrame implements WindowListener , MouseListener
 	private static Peca promovida = null;
 	private static Ponto orig = null;
 	
-	/** Self reference */
-	private static iPromotion p = null;
 	
 	public iPromotion(Ponto pt0)
 	{
@@ -68,7 +65,6 @@ public class iPromotion extends JFrame implements WindowListener , MouseListener
 		addWindowListener( (WindowListener) this);
 		addMouseListener( (MouseListener) this );
 		
-		p = this;
 	}
 
 	
@@ -112,13 +108,6 @@ public class iPromotion extends JFrame implements WindowListener , MouseListener
 	public static Peca getPromovida()
 	{
 		return promovida;
-	}
-
-	/** Fecha a janela */
-	public static void Close()
-	{
-		p.setVisible(false);
-		p.dispose();
 	}
 	
 	/** Implementa os tratadores da janela*/
@@ -177,10 +166,16 @@ public class iPromotion extends JFrame implements WindowListener , MouseListener
 			else if(xi > 4*OFFSET + 120 && xi < 4*OFFSET + 160)
 				promovida = new Bispo(Tabuleiro.getVez() , orig);
 		}
-		TabObserver.promove();
-		Tabuleiro.ViraVez();
-		TabObserver.Notifica();
-		iTabObserver.Notifica();
+		
+		if ( promovida != null )
+		{
+			TabObserver.promove(promovida);
+			this.setVisible(false);
+			this.dispose();
+			TabObserver.Notifica();
+			iTabObserver.Notifica();
+		}
+
 	}
 	
 	@Override

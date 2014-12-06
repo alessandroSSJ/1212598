@@ -54,11 +54,15 @@ public class TabObserver{
 	
 	/** Pontos promovidos */
 	private static Ponto pontoPromove = null;
-	
+
+	/** Estado de promoção de peao */
+	private static boolean promovendo = false;
 	
 	public TabObserver()
 	{
 		tab = Tabuleiro.getTabuleiro();
+		
+		promovendo = false;
 		
 		AudioInputStream stream;
 	    AudioFormat format;
@@ -134,10 +138,10 @@ public class TabObserver{
 	/** Faz uma jogada no tabuleiro */
 	public static void Rodada()
 	{
-		boolean promove = false;
+		
 		/* Uma rodada normal */
 		
-		if ( !iTabuleiro.getJogadaValida() )
+		if ( !iTabuleiro.getJogadaValida() || promovendo)
 			return;
 		
 		Ponto ptOrig = iTabuleiro.getOrig();
@@ -220,7 +224,9 @@ public class TabObserver{
 			
 			iPromotion p = new iPromotion(ptOrig);
 			p.DrawPecas();
-				
+			
+			promovendo = true;
+			
 			if(e.getPecaComida() != null)
 			{
 				Peca temp =  Tabuleiro.getPeca(e.getPecaComida());
@@ -231,18 +237,6 @@ public class TabObserver{
 			Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 			
 			pontoPromove = ptDest;
-				
-		//	while( iPromotion.getPromovida() == null );
-		/*	
-			tab.CriaPeca(ptDest, iPromotion.getPromovida());
-			
-			iPromotion.getPromovida().setPonto(ptDest.getX() , ptDest.getY());
-			
-			clipMov.loop(1);
-			
-			iPromotion.Close();*/
-			
-			
 			
 		}
 		catch(MovimentoInvalido e)
@@ -272,11 +266,14 @@ public class TabObserver{
 		}
 		finally
 		{
-			iTabuleiro.setJogadaValida(false);
 			iTabuleiro.ZerarRodada();
+			iTabuleiro.setJogadaValida(false);
 		}	
 		
   /* ********************* Checa se o outro rei foi deixado em xeque! ********************************* */
+		
+		if ( promovendo )
+			return;
 		
 	 	if( Tabuleiro.getVez() == 'b'){
 			if (Tabuleiro.ChecaXequeReiPreto() )
@@ -371,21 +368,59 @@ public class TabObserver{
 		
 	}
 	
-	public static void promove()
+	public static void promove(Peca promoted)
 	{
-		tab.CriaPeca(pontoPromove, iPromotion.getPromovida());
+		System.out.printf("Promovendo\n");
+		
+		tab.CriaPeca(pontoPromove, promoted);
 		
 		iPromotion.getPromovida().setPonto(pontoPromove.getX() , pontoPromove.getY());
 		
 		clipMov.loop(1);
 		
-		iPromotion.Close();
+		promovendo = false;
+		
+		  /* ********************* Checa se o outro rei foi deixado em xeque! ********************************* */
+		
+				if ( promovendo )
+					return;
+				
+			 	if( Tabuleiro.getVez() == 'b'){
+					if (Tabuleiro.ChecaXequeReiPreto() )
+			 			System.out.printf("XEQUE REI PRETO\n");} 
+				else
+					if (Tabuleiro.ChecaXequeReiBranco())
+						System.out.printf("XEQUE REI BRANCO\n");
+			 	
+		  /* ************************************************************************************************** */
+			 	
+			 	
+		  /* ******************************* Checa se ocorreu xeque mate **************************************** */ 	
+				
+				if ( Tabuleiro.getVez() == 'b' && Tabuleiro.getXequeReiPreto() && Tabuleiro.ChecaXequeMateReiPreto() )
+				{
+					System.out.printf("XEQUE MATE\nPEÇAS BRANCAS GANHARAM!\n");
+					clipMate.loop(0);
+				}
+				else if ( Tabuleiro.getVez() == 'p' && Tabuleiro.getXequeReiBranco() && Tabuleiro.ChecaXequeMateReiBranco() )
+				{
+					System.out.printf("XEQUE MATE\nPEÇAS PRETAS GANHARAM\n");
+					clipMate.loop(0);
+				}
+				
+		  /* ************************************************************************************************************** */	
+		
+		Tabuleiro.ViraVez();
+		Tabuleiro.ComputaRodada();
 		
 	}
 	
 	/** Metodo notify*/
 	public static void Notifica()
 	{
+		if ( promovendo )
+			return;
+		
 		Rodada();
 		
 		if (iOptions.readOption() == iOptions.SAIR && iConfirmation.readResponse() == iConfirmation.OK)
