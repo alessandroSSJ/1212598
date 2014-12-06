@@ -238,7 +238,7 @@ public class iTabuleiro extends JFrame implements MouseListener {
     	
     }
 	
-    /* Trata o ponto do primeiro click */
+    /** Trata o ponto do primeiro click */
     private void ChecaOrigem(Ponto p) throws PecaOrigemNull , CorDePecaErrado
     {
     	Peca orig = Tabuleiro.getPeca(p) ;

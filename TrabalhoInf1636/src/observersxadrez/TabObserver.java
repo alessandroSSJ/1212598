@@ -270,41 +270,12 @@ public class TabObserver{
 			iTabuleiro.setJogadaValida(false);
 		}	
 		
-  /* ********************* Checa se o outro rei foi deixado em xeque! ********************************* */
 		
 		if ( promovendo )
 			return;
 		
-	 	if( Tabuleiro.getVez() == 'b'){
-			if (Tabuleiro.ChecaXequeReiPreto() )
-	 			System.out.printf("XEQUE REI PRETO\n");} 
-		else
-			if (Tabuleiro.ChecaXequeReiBranco())
-				System.out.printf("XEQUE REI BRANCO\n");
-	 	
-  /* ************************************************************************************************** */
-	 	
-	 	
-  /* ******************************* Checa se ocorreu xeque mate **************************************** */ 	
-		
-		if ( Tabuleiro.getVez() == 'b' && Tabuleiro.getXequeReiPreto() && Tabuleiro.ChecaXequeMateReiPreto() )
-		{
-			System.out.printf("XEQUE MATE\nPEÇAS BRANCAS GANHARAM!\n");
-			clipMate.loop(0);
-		}
-		else if ( Tabuleiro.getVez() == 'p' && Tabuleiro.getXequeReiBranco() && Tabuleiro.ChecaXequeMateReiBranco() )
-		{
-			System.out.printf("XEQUE MATE\nPEÇAS PRETAS GANHARAM\n");
-			clipMate.loop(0);
-		}
-		
-  /* ************************************************************************************************************** */		
-				
-		/* Vira a rodada */
+		FimDeRodada();
 
-		Tabuleiro.ViraVez();
-		Tabuleiro.ComputaRodada();
-		/* *********************************************** */
 	}
 	
 	/** get Tabuleiro */
@@ -368,10 +339,44 @@ public class TabObserver{
 		
 	}
 	
-	public static void promove(Peca promoted)
+	private static void FimDeRodada()
 	{
-		System.out.printf("Promovendo\n");
+		/* ********************* Checa se o outro rei foi deixado em xeque! ********************************* */
 		
+		if ( promovendo )
+			return;
+		
+	 	if( Tabuleiro.getVez() == 'b'){
+			if (Tabuleiro.ChecaXequeReiPreto() )
+	 			System.out.printf("XEQUE REI PRETO\n");} 
+		else
+			if (Tabuleiro.ChecaXequeReiBranco())
+				System.out.printf("XEQUE REI BRANCO\n");
+	 	
+  /* ************************************************************************************************** */
+	 	
+	 	
+  /* ******************************* Checa se ocorreu xeque mate **************************************** */ 	
+		
+		if ( Tabuleiro.getVez() == 'b' && Tabuleiro.getXequeReiPreto() && Tabuleiro.ChecaXequeMateReiPreto() )
+		{
+			System.out.printf("XEQUE MATE\nPEÇAS BRANCAS GANHARAM!\n");
+			clipMate.loop(0);
+		}
+		else if ( Tabuleiro.getVez() == 'p' && Tabuleiro.getXequeReiBranco() && Tabuleiro.ChecaXequeMateReiBranco() )
+		{
+			System.out.printf("XEQUE MATE\nPEÇAS PRETAS GANHARAM\n");
+			clipMate.loop(0);
+		}
+		
+  /* ************************************************************************************************************** */	
+
+		Tabuleiro.ViraVez();
+		Tabuleiro.ComputaRodada();
+	}
+	
+	public static void promove(Peca promoted)
+	{		
 		tab.CriaPeca(pontoPromove, promoted);
 		
 		iPromotion.getPromovida().setPonto(pontoPromove.getX() , pontoPromove.getY());
@@ -380,39 +385,7 @@ public class TabObserver{
 		
 		promovendo = false;
 		
-		  /* ********************* Checa se o outro rei foi deixado em xeque! ********************************* */
-		
-				if ( promovendo )
-					return;
-				
-			 	if( Tabuleiro.getVez() == 'b'){
-					if (Tabuleiro.ChecaXequeReiPreto() )
-			 			System.out.printf("XEQUE REI PRETO\n");} 
-				else
-					if (Tabuleiro.ChecaXequeReiBranco())
-						System.out.printf("XEQUE REI BRANCO\n");
-			 	
-		  /* ************************************************************************************************** */
-			 	
-			 	
-		  /* ******************************* Checa se ocorreu xeque mate **************************************** */ 	
-				
-				if ( Tabuleiro.getVez() == 'b' && Tabuleiro.getXequeReiPreto() && Tabuleiro.ChecaXequeMateReiPreto() )
-				{
-					System.out.printf("XEQUE MATE\nPEÇAS BRANCAS GANHARAM!\n");
-					clipMate.loop(0);
-				}
-				else if ( Tabuleiro.getVez() == 'p' && Tabuleiro.getXequeReiBranco() && Tabuleiro.ChecaXequeMateReiBranco() )
-				{
-					System.out.printf("XEQUE MATE\nPEÇAS PRETAS GANHARAM\n");
-					clipMate.loop(0);
-				}
-				
-		  /* ************************************************************************************************************** */	
-		
-		Tabuleiro.ViraVez();
-		Tabuleiro.ComputaRodada();
-		
+		FimDeRodada();
 	}
 	
 	/** Metodo notify*/
