@@ -58,7 +58,8 @@ public class iPromotion extends JFrame implements WindowListener , MouseListener
 		
 		setBounds(x,y,WIDTH,HEIGHT); /* Posiciona o tabuleiro no meio da tela do monitor */
 		setExtendedState(MAXIMIZED_BOTH);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		this.setAlwaysOnTop(true);
 		
 		setResizable(false);
 		
@@ -84,6 +85,7 @@ public class iPromotion extends JFrame implements WindowListener , MouseListener
 		this.add(c) ;
 		this.setVisible(true) ;
 		this.add(b) ;
+		this.toFront();
 	}
 
 	/** Retorna a altura do JFrame */
@@ -172,7 +174,6 @@ public class iPromotion extends JFrame implements WindowListener , MouseListener
 			TabObserver.promove(promovida);
 			this.setVisible(false);
 			this.dispose();
-			TabObserver.Notifica();
 			iTabObserver.Notifica();
 		}
 

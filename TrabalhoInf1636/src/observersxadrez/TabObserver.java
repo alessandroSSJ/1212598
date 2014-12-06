@@ -141,7 +141,7 @@ public class TabObserver{
 		
 		/* Uma rodada normal */
 		
-		if ( !iTabuleiro.getJogadaValida() || promovendo)
+		if ( !iTabuleiro.getJogadaValida() || promovendo )
 			return;
 		
 		Ponto ptOrig = iTabuleiro.getOrig();
@@ -384,6 +384,8 @@ public class TabObserver{
 		clipMov.loop(1);
 		
 		promovendo = false;
+		
+		iTabuleiro.ZerarRodada();
 		
 		FimDeRodada();
 	}
