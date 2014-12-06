@@ -101,13 +101,12 @@ private static final long serialVersionUID = 1L;
 	private void IniciarJogo()
 	{
 
-		TabObserver tab = new TabObserver();
-		@SuppressWarnings("unused")
-		iTabObserver iTab = new iTabObserver() ;
+		new TabObserver()  ;
+		new iTabObserver() ;
 
 		/* Inicializando as threads */
 	
-		tab.start();
+		TabObserver.Notifica();
 		iTabObserver.Notifica();
 		close();
 	}
@@ -148,16 +147,29 @@ private static final long serialVersionUID = 1L;
 			arquivo[8][0] = scanner.next();
 			arquivo[9][0] = scanner.next();
 			
-
-			TabObserver tab = new TabObserver(arquivo);
-			@SuppressWarnings("unused")
-			iTabObserver iTab = new iTabObserver() ;
+			new TabObserver(arquivo);
+			new iTabObserver() ;
 
 			/* Inicializando as threads */
 		
-			tab.start();
+			TabObserver.Notifica();
 			iTabObserver.Notifica();
 			close();
+			
+			String filename = scanner.next();
+			while(!filename.equals("b"))
+			{
+				iPecasComida.sendPeca(filename , 'b');
+				filename = scanner.next();
+			}
+			
+			filename = scanner.next();
+			while(!filename.equals("p"))
+			{
+				iPecasComida.sendPeca(filename , 'p');
+				filename = scanner.next();
+			}
+			
 		}
 		
 	}

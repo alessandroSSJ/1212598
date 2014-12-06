@@ -36,18 +36,18 @@ public class iPecasComida extends JPanel {
 	private static final int offset2 = 20;
 	
 	/** Vetor do nome das peças comidas no jogo */
-	private static String vetorPreto[] = new String[24];
+	private static String vetorPreto[];
 	private static int numBranco = 0  ;
-	private static String vetorBranco[] = new String[24];
+	private static String vetorBranco[];
 	private static int numPreto = 0   ;
 	
 	public iPecasComida()
 	{
 		super();
 		
-		vetorPreto = new String[24];
+		vetorPreto = new String[16];
 		numBranco = 0  ;
-		vetorBranco = new String[24];
+		vetorBranco = new String[16];
 		numPreto = 0   ;
 	}
 	
@@ -120,7 +120,16 @@ public class iPecasComida extends JPanel {
 			vetorPreto[numPreto] = filename;
 			numPreto ++ ;
 		}
-		
+	}
+	
+	public static String[] getComidasBrancas()
+	{
+		return vetorBranco;
+	}
+	
+	public static String[] getComidasPretas()
+	{
+		return vetorPreto;
 	}
 }
 

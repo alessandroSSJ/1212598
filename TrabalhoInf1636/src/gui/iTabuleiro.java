@@ -151,7 +151,7 @@ public class iTabuleiro extends JFrame implements MouseListener {
     public void mouseClicked(MouseEvent e)
 	{
 		int xi = e.getX() / iFundo.getLargura() ;
-		int yi = (8*iFundo.getAltura() - e.getY() ) / iFundo.getAltura()  ;
+		int yi = (8*iFundo.getAltura() - e.getY() + 30 ) / iFundo.getAltura()  ;
 
 		if( ptOrig == null && ptDest == null && xi >= 0 && xi <= 7 && yi >= 0 && yi <= 7 )
 		{

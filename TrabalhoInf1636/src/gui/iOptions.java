@@ -183,6 +183,27 @@ public class iOptions extends JLayeredPane {
 				out.write("#");
 				out.write(Integer.toString(Tabuleiro.getNumRodadas()));
 				out.write("#");
+				
+				String [] vetorBranco = iPecasComida.getComidasBrancas();
+				String [] vetorPreto = iPecasComida.getComidasPretas();
+				
+				for(int k = 0 ; vetorBranco[k] != null ; k++ )
+				{
+					out.write(vetorBranco[k]);
+					out.write("#");
+				}
+				
+				out.write("b");
+				out.write("#");
+				
+				for(int k = 0 ; vetorPreto[k] != null ; k++ )
+				{
+					out.write(vetorPreto[k]);
+					out.write("#");
+				}
+				
+				out.write("p");
+				out.write("#");
 					
 					
 					/* FIM */

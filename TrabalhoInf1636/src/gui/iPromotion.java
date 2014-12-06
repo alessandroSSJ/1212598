@@ -15,10 +15,18 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 
+import observersxadrez.TabObserver;
+import observersxadrez.iTabObserver;
 import auxiliar.Ponto;
-import engine.*;
+import engine.Bispo;
+import engine.Cavalo;
+import engine.Dama;
+import engine.Peca;
+import engine.Tabuleiro;
+import engine.Torre;
 
 public class iPromotion extends JFrame implements WindowListener , MouseListener {
 	
@@ -32,8 +40,11 @@ public class iPromotion extends JFrame implements WindowListener , MouseListener
 	private static final int OFFSET = 25; 
 	
 	/** Peca a set promovida */
-	private Peca promovida = null;
-	private Ponto orig = null;
+	private static Peca promovida = null;
+	private static Ponto orig = null;
+	
+	/** Self reference */
+	private static iPromotion p = null;
 	
 	public iPromotion(Ponto pt0)
 	{
@@ -50,13 +61,14 @@ public class iPromotion extends JFrame implements WindowListener , MouseListener
 		
 		setBounds(x,y,WIDTH,HEIGHT); /* Posiciona o tabuleiro no meio da tela do monitor */
 		setExtendedState(MAXIMIZED_BOTH);
-		
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		setResizable(false);
 		
 		addWindowListener( (WindowListener) this);
 		addMouseListener( (MouseListener) this );
+		
+		p = this;
 	}
 
 	
@@ -97,16 +109,16 @@ public class iPromotion extends JFrame implements WindowListener , MouseListener
 	}
 	
 	/** Retorna a peca promovida */
-	public Peca getPromovida()
+	public static Peca getPromovida()
 	{
 		return promovida;
 	}
 
 	/** Fecha a janela */
-	public void Close()
+	public static void Close()
 	{
-		this.setVisible(false);
-		this.dispose();
+		p.setVisible(false);
+		p.dispose();
 	}
 	
 	/** Implementa os tratadores da janela*/
@@ -165,6 +177,10 @@ public class iPromotion extends JFrame implements WindowListener , MouseListener
 			else if(xi > 4*OFFSET + 120 && xi < 4*OFFSET + 160)
 				promovida = new Bispo(Tabuleiro.getVez() , orig);
 		}
+		TabObserver.promove();
+		Tabuleiro.ViraVez();
+		TabObserver.Notifica();
+		iTabObserver.Notifica();
 	}
 	
 	@Override

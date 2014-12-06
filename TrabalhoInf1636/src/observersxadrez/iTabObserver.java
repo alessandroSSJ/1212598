@@ -32,7 +32,7 @@ public class iTabObserver {
 	public static void Notifica()
 	{
 		iTab.repaint();
-		//System.out.printf("Options : %d\nCOnfirm : %d\n" , iOptions.readOption() , iConfirmation.readResponse());
+
 		if (iOptions.readOption() == iOptions.MENU && iConfirmation.readResponse() == iConfirmation.OK)
 		{
 			iConfirmation.close();

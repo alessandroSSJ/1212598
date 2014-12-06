@@ -38,7 +38,7 @@ import gui.iPrincipal;
 import gui.iPromotion;
 import gui.iTabuleiro;
 
-public class TabObserver extends Thread{
+public class TabObserver{
 	
 	public static Tabuleiro tab = null;
 	
@@ -52,9 +52,12 @@ public class TabObserver extends Thread{
 	private static File movError = new File("Sons/error.wav");
 	private static Clip clipError;
 	
+	/** Pontos promovidos */
+	private static Ponto pontoPromove = null;
+	
+	
 	public TabObserver()
 	{
-		super("Thread do tabuleiro");
 		tab = Tabuleiro.getTabuleiro();
 		
 		AudioInputStream stream;
@@ -93,7 +96,6 @@ public class TabObserver extends Thread{
 	/** Tabuleiro de arquivo externo */
 	public TabObserver( String[][] arquivo )
 	{
-		super("Thread do tabuleiro");
 		tab = Tabuleiro.getTabuleiro(arquivo);
 		
 		AudioInputStream stream;
@@ -132,6 +134,7 @@ public class TabObserver extends Thread{
 	/** Faz uma jogada no tabuleiro */
 	public static void Rodada()
 	{
+		boolean promove = false;
 		/* Uma rodada normal */
 		
 		if ( !iTabuleiro.getJogadaValida() )
@@ -214,27 +217,32 @@ public class TabObserver extends Thread{
 		}
 		catch(Promover e)
 		{
+			
 			iPromotion p = new iPromotion(ptOrig);
 			p.DrawPecas();
-			
+				
 			if(e.getPecaComida() != null)
 			{
-				Peca temp = (Peca) e.getPecaComida();
+				Peca temp =  Tabuleiro.getPeca(e.getPecaComida());
 				tab.ComePeca(e.getPecaComida());
 				iPecasComida.sendPeca("Pecas/" + temp.getLado() + "_" + temp.getTipo() + ".gif" , temp.getLado());
 			}
 			
 			Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 			
-			while( p.getPromovida() == null ) System.out.printf("Aguardando escolha\n") ;
-						
-			tab.CriaPeca(ptDest, p.getPromovida());
+			pontoPromove = ptDest;
+				
+		//	while( iPromotion.getPromovida() == null );
+		/*	
+			tab.CriaPeca(ptDest, iPromotion.getPromovida());
 			
-			p.getPromovida().setPonto(ptDest.getX() , ptDest.getY());
+			iPromotion.getPromovida().setPonto(ptDest.getX() , ptDest.getY());
 			
 			clipMov.loop(1);
 			
-			p.Close();
+			iPromotion.Close();*/
+			
+			
 			
 		}
 		catch(MovimentoInvalido e)
@@ -363,6 +371,17 @@ public class TabObserver extends Thread{
 		
 	}
 	
+	public static void promove()
+	{
+		tab.CriaPeca(pontoPromove, iPromotion.getPromovida());
+		
+		iPromotion.getPromovida().setPonto(pontoPromove.getX() , pontoPromove.getY());
+		
+		clipMov.loop(1);
+		
+		iPromotion.Close();
+		
+	}
 	
 	/** Metodo notify*/
 	public static void Notifica()
