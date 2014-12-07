@@ -46,7 +46,7 @@ public class iPromotion extends JFrame implements WindowListener , MouseListener
 	public iPromotion(Ponto pt0)
 	{
 		super("Qual peça você deseja promover?") ;
-		
+		promovida = null;
 		orig = pt0;
 		
 		Toolkit tk = Toolkit.getDefaultToolkit();
