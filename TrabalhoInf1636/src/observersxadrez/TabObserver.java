@@ -408,7 +408,7 @@ public class TabObserver{
 		
 		iPromotion.getPromovida().setPonto(pontoPromove.getX() , pontoPromove.getY());
 		
-		clipMov.loop(1);
+		somMov();
 		
 		promovendo = false;
 		
