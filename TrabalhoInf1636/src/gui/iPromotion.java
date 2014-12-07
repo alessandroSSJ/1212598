@@ -175,6 +175,7 @@ public class iPromotion extends JFrame implements WindowListener , MouseListener
 			this.setVisible(false);
 			this.dispose();
 			iTabObserver.Notifica();
+			promovida = null;
 		}
 
 	}
