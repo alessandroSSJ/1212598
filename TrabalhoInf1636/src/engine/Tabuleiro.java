@@ -503,12 +503,11 @@ public class Tabuleiro {
 				if ( atual != null && atual.getLado() != lado && atual.getTipo()!="rei" && atual.VefXeque() )
 				{
 					Tabuleiro.ChangePeca( posOriginal.getY(), posOriginal.getX() , pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX());    /* Retorna rei para sua posição de origem */		
-			
+					
 					if (!TabObserver.PreverXeque(pecasDeXeque[0], new Ponto (atual.getPonto().getX() , atual.getPonto().getY()), pontoPeca )) /* Testa se de fato pode mecher a peça */
 						return false;
 					else
-						Tabuleiro.ChangePeca(pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX() , posOriginal.getY(), posOriginal.getX());;
-	
+						Tabuleiro.ChangePeca(pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX() , posOriginal.getY(), posOriginal.getX());
 				}
 			}
 			
@@ -516,7 +515,7 @@ public class Tabuleiro {
 		Tabuleiro.ChangePeca( posOriginal.getY(), posOriginal.getX() , pecasDeXeque[0].getPonto().getY() , pecasDeXeque[0].getPonto().getX());
 							
 		/* ****************************************************************************************************** */
-		
+
 		/* Se chegar aqui, significa que ninguém pode comer aquela única peça de xeque, portanto, se ela for um cavalo
 		 * é xeque mate!
 		 */

@@ -135,6 +135,7 @@ public class iFundo extends JLayeredPane {
 					}
 					
 				}
+
 				if ( !selecionou && Tabuleiro.getXequeReiBranco() && Tabuleiro.getReiBranco().getX() == i && Tabuleiro.getReiBranco().getY() == ( Tabuleiro.getColunas() - 1 ) - j )
 					g2d.setPaint(Color.pink);
 				if ( !selecionou && Tabuleiro.getXequeReiPreto() && Tabuleiro.getReiPreto().getX() == i && Tabuleiro.getReiPreto().getY() == ( Tabuleiro.getColunas() - 1 ) - j )

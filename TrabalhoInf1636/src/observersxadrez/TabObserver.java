@@ -19,6 +19,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
+import javax.swing.JOptionPane;
 
 import auxiliar.Ponto;
 import engine.Peca;
@@ -52,6 +53,9 @@ public class TabObserver{
 	private static File movError = new File("Sons/error.wav");
 	private static Clip clipError;
 	
+	private static File movXeque = new File("Sons/xeque.wav");
+	private static Clip clipXeque;
+	
 	/** Pontos promovidos */
 	private static Ponto pontoPromove = null;
 
@@ -83,6 +87,13 @@ public class TabObserver{
 		    info = new DataLine.Info(Clip.class, format);
 		    clipMate = (Clip) AudioSystem.getLine(info);
 		    clipMate.open(stream);
+		    
+		    /** Som de xeque */
+		    stream = AudioSystem.getAudioInputStream(movXeque);
+		    format = stream.getFormat();
+		    info = new DataLine.Info(Clip.class, format);
+		    clipXeque = (Clip) AudioSystem.getLine(info);
+		    clipXeque.open(stream);
 		    
 		    /** Som de movimentação inválida */
 		    stream = AudioSystem.getAudioInputStream(movError);
@@ -121,6 +132,13 @@ public class TabObserver{
 		    info = new DataLine.Info(Clip.class, format);
 		    clipMate = (Clip) AudioSystem.getLine(info);
 		    clipMate.open(stream);
+		    
+		    /** Som de xeque */
+		    stream = AudioSystem.getAudioInputStream(movXeque);
+		    format = stream.getFormat();
+		    info = new DataLine.Info(Clip.class, format);
+		    clipXeque = (Clip) AudioSystem.getLine(info);
+		    clipXeque.open(stream);
 		    
 		    /** Som de movimentação inválida */
 		    stream = AudioSystem.getAudioInputStream(movError);
@@ -176,7 +194,7 @@ public class TabObserver{
 			if ( pecaDestino == null )
 			{
 				Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
-				clipMov.loop(1);
+				somMov();
 			}
 			else 
 			{
@@ -195,7 +213,7 @@ public class TabObserver{
 					System.out.printf("Algum erro estranho\n");
 				
 				Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
-				clipMov.loop(1);
+				somMov();
 		    }
 			
 		}
@@ -205,19 +223,19 @@ public class TabObserver{
 			Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptDest.getY() , ptDest.getX() ) ;
 			tab.ComePeca(temp.getPonto());
 			iPecasComida.sendPeca("Pecas/" + temp.getLado() + "_" + temp.getTipo() + ".gif" , temp.getLado());
-			clipMov.loop(1);
+			somMov();
 		}
 		catch(RoqueDireita e)
 		{
 			Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptOrig.getY() , ptOrig.getX() + 2 ) ;
 			Tabuleiro.ChangePeca(e.getY() , e.getX() , e.getY() , e.getX() - 2 ) ;
-			clipMov.loop(1);
+			somMov();
 		} 
 		catch(RoqueEsquerda e)
 		{
 			Tabuleiro.ChangePeca(ptOrig.getY() , ptOrig.getX() , ptOrig.getY() , ptOrig.getX() - 2 ) ;
 			Tabuleiro.ChangePeca(e.getY() , e.getX() , e.getY() , e.getX() + 3 ) ;
-			clipMov.loop(1);
+			somMov();
 		}
 		catch(Promover e)
 		{
@@ -241,7 +259,7 @@ public class TabObserver{
 		}
 		catch(MovimentoInvalido e)
 		{
-			clipError.loop(1);
+			somError();
 			return;
 		}
 		catch(PecaOrigemNull e)
@@ -255,7 +273,7 @@ public class TabObserver{
 		catch(ReiEmXeque e)
 		{
 			System.out.println(e.getMessage());
-			clipError.loop(1);
+			somError();
 			return;
 		}
 		catch(Exception e)
@@ -307,7 +325,7 @@ public class TabObserver{
 			}
 			
 			Tabuleiro.ChangePeca(ptDest.getY() , ptDest.getX() , ptOrig.getY() , ptOrig.getX() ) ;
-			Tabuleiro.XequeReiPreto(reiState);
+			Tabuleiro.XequeReiBranco(reiState);
 			tab.CriaPeca(ptDest , temp);
 			
 			return false;
@@ -346,12 +364,18 @@ public class TabObserver{
 		if ( promovendo )
 			return;
 		
-	 	if( Tabuleiro.getVez() == 'b'){
+	 	if( Tabuleiro.getVez() == 'b')
+	 	{
 			if (Tabuleiro.ChecaXequeReiPreto() )
-	 			System.out.printf("XEQUE REI PRETO\n");} 
+			{
+	 			System.out.printf("XEQUE REI PRETO\n");
+			}
+		} 
 		else
 			if (Tabuleiro.ChecaXequeReiBranco())
+			{
 				System.out.printf("XEQUE REI BRANCO\n");
+			}
 	 	
   /* ************************************************************************************************** */
 	 	
@@ -362,15 +386,19 @@ public class TabObserver{
 		{
 			System.out.printf("XEQUE MATE\nPEÇAS BRANCAS GANHARAM!\n");
 			clipMate.loop(0);
+			JOptionPane.showMessageDialog(null, "XEQUE MATE\nPEÇAS BRANCAS GANHARAM!\n",null, JOptionPane.PLAIN_MESSAGE);
 		}
 		else if ( Tabuleiro.getVez() == 'p' && Tabuleiro.getXequeReiBranco() && Tabuleiro.ChecaXequeMateReiBranco() )
 		{
 			System.out.printf("XEQUE MATE\nPEÇAS PRETAS GANHARAM\n");
 			clipMate.loop(0);
+			JOptionPane.showMessageDialog(null, "XEQUE MATE\nPEÇAS PRETAS GANHARAM\n",null, JOptionPane.PLAIN_MESSAGE);
 		}
+		else if ( Tabuleiro.getXequeReiPreto() || Tabuleiro.getXequeReiBranco() )
+			somXeque();
 		
   /* ************************************************************************************************************** */	
-
+		
 		Tabuleiro.ViraVez();
 		Tabuleiro.ComputaRodada();
 	}
@@ -390,6 +418,24 @@ public class TabObserver{
 		FimDeRodada();
 	}
 	
+	private static void somMov()
+	{
+		clipMov.setFramePosition(0);
+		clipMov.loop(0);
+	}
+	
+	private static void somError()
+	{
+		clipError.setFramePosition(0);
+		clipError.loop(0);
+	}
+	
+	private static void somXeque()
+	{
+		clipXeque.setFramePosition(0);
+		clipXeque.loop(0);
+	}
+
 	/** Metodo notify*/
 	public static void Notifica()
 	{
