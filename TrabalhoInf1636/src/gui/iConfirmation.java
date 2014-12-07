@@ -55,6 +55,8 @@ public class iConfirmation extends JFrame {
 		
 		setResizable(false);
 		
+		this.setAlwaysOnTop(true);
+		
 		messageLabel = message;
 	}
 	
@@ -113,6 +115,7 @@ public class iConfirmation extends JFrame {
 		this.add("East",nao);
 		this.add("North",men);
 		this.setVisible(true);
+		this.toFront();
 		
 	}
 	

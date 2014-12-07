@@ -74,8 +74,16 @@ public class Peao implements Peca {
 		}
 		catch(Promover e)
 		{
-			comida = temp;
-			return true;
+			if ( comida != null )
+			{
+				comida = temp;
+				throw new AtacarPeca(xFinal,yFinal);
+			}
+			else
+			{
+				comida = temp;
+				return true;
+			}
 		}
 		
 		if ( comida != null && pode )
@@ -104,7 +112,7 @@ public class Peao implements Peca {
 			
 			if ( p == null && pt0.getY() == 6 && yFinal == 7 && distX == 0)
 				throw new Promover();
-			if ( p != null && pt0.getY() == 6 && yFinal == 7 && (distX == -1 || distX ==1) )
+			if ( p != null && p.getLado() != lado && pt0.getY() == 6 && yFinal == 7 && (distX == -1 || distX ==1) )
 				throw new Promover(p.getPonto());
 			
 			/* Ao passar */
@@ -154,7 +162,7 @@ public class Peao implements Peca {
 			
 			if ( p == null && pt0.getY() == 1 && yFinal == 0 && distX == 0)
 				throw new Promover();
-			if ( p != null && pt0.getY() == 1 && yFinal == 0 && (distX == -1 || distX ==1) )
+			if ( p != null && p.getLado() != lado && pt0.getY() == 1 && yFinal == 0 && (distX == -1 || distX ==1) )
 				throw new Promover(p.getPonto());
 			
 			
