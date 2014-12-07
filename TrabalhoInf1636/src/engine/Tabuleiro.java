@@ -542,10 +542,8 @@ public class Tabuleiro {
 				Peca atual = pecas[j][i];
 				if ( atual != null && atual.getLado() != lado && atual.getTipo() != "rei" )
 				{	
-					if ( Chega(pecasDeXeque[0].getPonto(), posOriginal , atual ) )
-					{
+					if ( Chega(pecasDeXeque[0].getPonto(), posOriginal , atual ) && !TabObserver.PreverXeque(pecasDeXeque[0], new Ponto (atual.getPonto().getX() , atual.getPonto().getY()), pontoPeca ) )
 						return false;
-					}
 				}
 			}
 		

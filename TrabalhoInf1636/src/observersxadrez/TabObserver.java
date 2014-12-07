@@ -288,7 +288,6 @@ public class TabObserver{
 			iTabuleiro.setJogadaValida(false);
 		}	
 		
-		
 		if ( promovendo )
 			return;
 		
